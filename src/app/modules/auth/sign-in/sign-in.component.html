@@ -1,0 +1,59 @@
+<div class="flex flex-col sm:flex-row items-center  justify-center  flex-auto min-w-0">
+    <div
+        class="md:flex md:items-center justify-center  w-full   md:h-full   py-8 px-4 sm:p-12 md:p-16 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+        <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+            <!-- Logo -->
+            <div class="flex flex-row items-center w-full  justify-center mb-16">
+                <img src="../../../../assets/images/logo/logo.png" class="w-20">
+            </div>
+            <fuse-alert class="mt-8 -mb-4" *ngIf="showAlert" [appearance]="'outline'" [showIcon]="false"
+                [type]="alert.type" [@shake]="alert.type === 'error'">
+                {{'Login Failed' | translate}}
+            </fuse-alert>
+
+            <!-- Sign in form -->
+            <form class="mt-8 flex flex-col" [formGroup]="signInForm" #signInNgForm="ngForm">
+
+                <!-- Email field -->
+                <mat-form-field class="w-full" appearance="standard">
+                    <mat-label>{{'Email address' | translate}}</mat-label>
+                    <input id="email" matInput [formControlName]="'email'">
+                    <mat-error *ngIf="signInForm.get('email').hasError('required')">
+                        {{'Email address is required' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="signInForm.get('email').hasError('email')">
+                        {{'Please enter a valid email address' | translate}}
+                    </mat-error>
+                </mat-form-field>
+
+                <!-- Password field -->
+                <mat-form-field class="w-full" appearance="standard">
+                    <mat-label>{{'Password' | translate}}</mat-label>
+                    <input id="password" matInput type="password" [formControlName]="'password'" #passwordField>
+                    <button mat-icon-button type="button"
+                        (click)="passwordField.type === 'password' ? passwordField.type = 'text' : passwordField.type = 'password'"
+                        matSuffix>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
+                            [svgIcon]="'heroicons_solid:eye'"></mat-icon>
+                        <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
+                            [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                    </button>
+                    <mat-error>
+                        {{'Password is required' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-checkbox >{{'Remember me' | translate}}</mat-checkbox>
+                <div class="flex  flex-col flex-initial items-center">
+                    <button class="mt-16 rounded-lg h-8 w-1/3 min-h-0" mat-flat-button [color]="'primary'" [disabled]="signInForm.disabled"
+                        (click)="signIn()">
+                        <span *ngIf="!signInForm.disabled">
+                            {{'Login' | translate}}
+                        </span>
+                        <mat-progress-spinner *ngIf="signInForm.disabled" [diameter]="24" [mode]="'indeterminate'">
+                        </mat-progress-spinner>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

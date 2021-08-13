@@ -1,0 +1,53 @@
+<div class="flex flex-col flex-auto  overflow-hidden page" @slideInLeft>
+
+    <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+
+    <div class="flex flex-col flex-initial bg-card shadow rounded-t-2xl overflow-hidden mb-2">
+        <div
+            class="relative  flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-3 px-2 md:px-4 border-b-2-color">
+            <!-- Loader -->
+            <!-- Title -->
+            <div class="text-2xl font-bold tracking-tight highlight-text-color">{{'Settings' | translate}}
+            </div>
+            <!-- Actions -->
+        </div>
+        <div class="flex sm:flex-row flex-col-reverse p-4 gap-4 md:justify-center">
+            <div class="flex flex-col gap-y-4" style="flex: 0 0 70%;">
+                <div class="flex flex-col bg-card shadow p-4">
+                    <div class="text-xl font-bold tracking-tight highlight-text-color py-4 ">
+                        {{'Documents Required' | translate}}
+                    </div>
+                    <hr class="border-b m-0 border-color">
+                    <div class="flex flex-col flex-auto gap-3 py-2">
+                        <div class="flex flex-col flex-auto bg-card w-full p-3 shadow gap-2"
+                            *ngFor="let permission of allPermmissionList;let i =index">
+                            <div
+                                class="flex-row flex flex-auto justify-between items-center text-lg font-bold tracking-tight highlight-text-color">
+                                <span>{{i+1}} )
+                                    {{translationService.getTranslatedField(permission,"model_name")}}</span>
+                            </div>
+                            <div class="border-b-secondary-color m-0"></div>
+                            <div class="flex flex-row flex-wrap">
+                                <!--  -->
+                                <div class="flex flex-row items-center justify-start m-2 p-2"
+                                    *ngFor="let subPermission of permission?.permissions">
+                                    <mat-checkbox>{{translationService.getTranslatedName(subPermission)}}</mat-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-initial pt-2 justify-end">
+                        <button
+                            class="mat-focus-indicator  rounded-lg min-h-0 h-9 fuse-mat-button-large primary-bg-color mat-flat-button mat-button-base"
+                            mat-flat-button>
+                            {{'Submit' | translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

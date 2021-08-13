@@ -1,0 +1,9 @@
+@import "styles/mixins";
+
+:host {
+    .container-width {
+        @include desktop() {
+            width: 80% !important;
+        }
+    }
+}

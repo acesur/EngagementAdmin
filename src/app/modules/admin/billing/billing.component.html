@@ -1,0 +1,166 @@
+<div class="flex flex-col flex-auto  overflow-hidden page" @slideInLeft>
+
+    <app-breadcrumb [breadcrumbs]="breadcrumbs"></app-breadcrumb>
+
+    <div class="flex flex-col flex-initial bg-card shadow rounded-t-2xl overflow-hidden mb-2">
+        <div class="flex flex-col flex-initial bg-card shadow rounded-t-2xl overflow-hidden mb-2">
+            <div
+                class="relative flex flex-col md:flex-row flex-0 md:items-center gap-1 md:justify-start py-2 px-2 md:px-4 border-b-2-color">
+                <div class="flex flex-row mt-2 md:mt-0 flex-auto gap-x-3 justify-start">
+                    <label class="highlight-text-color mat-title mb-0">{{'Billing' | translate}}</label>
+                </div>
+                <div class="flex flex-row mt-2 md:mt-0 flex-initial gap-x-3 justify-end">
+                    <button class="fuse-mat-button highlight-text-color status-btn pl-8 pr-8"
+                        [ngClass]="!isPaymentTab ? 'active-btn rounded-bl-xl rounded-br-xl' : '' "
+                        (click)="toggleStatus(false)" mat-flat-button>
+                        {{'Subscription and Services' | translate}}
+                    </button>
+                    <button class="fuse-mat-button highlight-text-color status-btn pl-8 pr-8"
+                        [ngClass]="isPaymentTab ? 'active-btn rounded-bl-xl rounded-br-xl' : '' "
+                        (click)="toggleStatus(true)" mat-flat-button>
+                        {{'Payment Method' | translate}}
+                    </button>
+                </div>
+                <!-- <div class="flex flex-shrink-0 md:mt-0 mt-2 justify-end items-center flex-initial sm:mt-0 sm:ml-4">
+                    <app-common-add-button (addBtnClick)="add()"></app-common-add-button>
+                </div> -->
+            </div>
+        </div>
+        <div class="flex sm:flex-row flex-col-reverse p-4 gap-4 md:justify-center">
+            <div class="flex flex-col flex-auto">
+                <mat-tab-group *ngIf="!isPaymentTab">
+                    <mat-tab label="Active">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-y-8 md:gap-y-0 md:gap-x-6 w-full">
+                            <!-- FAQs card -->
+                            <div
+                                class="relative flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                <div class="flex flex-col flex-auto items-center p-8 text-center">
+                                    <div class="text-2xl font-semibold">Veras PRO (Annual)</div>
+                                    <div class="  mt-1 text-secondary">Veras PRO (Annual) USD 0.5 per
+                                        month/user, Subscription will automatically renew
+                                        basis 60,000 users on August 10, 2021
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center py-4 px-8 text-primary bg-gray-50 dark:bg-transparent dark:border-t">
+                                    <a class="flex items-center">
+                                        <span class="absolute inset-0"></span>
+                                        <span class="font-medium">Manage</span>
+                                        <mat-icon class="ml-2 icon-size-5 text-current"
+                                            [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Guides card -->
+                            <div
+                                class="relative flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                <div class="flex flex-col flex-auto items-center p-8 text-center">
+                                    <div class="text-2xl font-semibold">Veras Basic (Annual)</div>
+                                    <div class="  mt-1 text-secondary">Veras Basic (Annual)
+                                        USD0.375/month/user,Subscription will automatically renew basis 60,000 users on
+                                        August 25, 2021
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center py-4 px-8 text-primary bg-gray-50 dark:bg-transparent dark:border-t">
+                                    <a class="flex items-center">
+                                        <span class="absolute inset-0"></span>
+                                        <span class="font-medium">Manage</span>
+                                        <mat-icon class="ml-2 icon-size-5 text-current"
+                                            [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+                    <mat-tab label="Cancelled">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-y-8 md:gap-y-0 md:gap-x-6 ">
+                            <!-- FAQs card -->
+                            <div
+                                class="relative flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                <div class="flex flex-col flex-auto items-center p-8 text-center">
+                                    <div class="text-2xl font-semibold">Veras PRO (Annual)</div>
+                                    <div class="  mt-1 text-secondary">Veras PRO (Annual) USD 0.5 per
+                                        month/user, Subscription will automatically renew
+                                        basis 60,000 users on August 10, 2021
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center py-4 px-8 text-primary bg-gray-50 dark:bg-transparent dark:border-t">
+                                    <a class="flex items-center">
+                                        <span class="absolute inset-0"></span>
+                                        <span class="font-medium">Manage</span>
+                                        <mat-icon class="ml-2 icon-size-5 text-current"
+                                            [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- Guides card -->
+                            <div
+                                class="relative flex flex-col rounded-2xl shadow hover:shadow-lg overflow-hidden bg-card transform transition-shadow ease-in-out duration-150">
+                                <div class="flex flex-col flex-auto items-center p-8 text-center">
+                                    <div class="text-2xl font-semibold">Veras Basic (Annual)</div>
+                                    <div class="  mt-1 text-secondary">Veras Basic (Annual)
+                                        USD0.375/month/user,Subscription will automatically renew basis 60,000 users on
+                                        August 25, 2021
+                                    </div>
+                                </div>
+                                <div
+                                    class="flex items-center justify-center py-4 px-8 text-primary bg-gray-50 dark:bg-transparent dark:border-t">
+                                    <a class="flex items-center">
+                                        <span class="absolute inset-0"></span>
+                                        <span class="font-medium">Manage</span>
+                                        <mat-icon class="ml-2 icon-size-5 text-current"
+                                            [svgIcon]="'heroicons_solid:arrow-narrow-right'"></mat-icon>
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </mat-tab>
+                </mat-tab-group>
+                <div class="flex  flex-col flex-auto p-6 sm:p-10" *ngIf="isPaymentTab">
+                    <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
+                        <label class="mat-title mb-0 highlight-text-color">All Cards</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-2 sm:mt-4">
+                            <div *ngFor="let card of cardDetails"
+                                class="flex flex-col shadow h-36 rounded-2xl overflow-hidden bg-card">
+                                <div class="flex flex-row gap-1 p-4">
+                                    <div class="flex flex-auto items-center justify-between">
+                                        <img src="../../../../assets/images/credit-card.svg" class="w-13">
+                                    </div>
+                                    <div class="mt-0.5 line-clamp-2 text-secondary flex flex-col flex-auto gap-1">
+                                        <div>{{card?.card_name}}</div>
+                                        <div>{{card?.name}}</div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col w-full mt-auto">
+                                    <div class="px-2 py-2 text-center bg-gray-50 dark:bg-transparent">
+                                        <button mat-stroked-button>
+                                            <span class="inline-flex items-center">
+                                                <ng-container>
+                                                    <span>Remove</span>
+                                                </ng-container>
+                                                <mat-icon class="ml-1.5 icon-size-5" svgIcon="mat_solid:delete">
+                                                </mat-icon>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col shadow h-36 rounded-2xl overflow-hidden bg-card">
+                                <div class="flex flex-col p-6 flex-auto">
+                                    <div class="flex flex-row items-center justify-center gap-1 flex-auto">
+                                        <mat-icon svgIcon="mat_solid:add"></mat-icon>
+                                        <label>{{'Add Payment Method'}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

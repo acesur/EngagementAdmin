@@ -1,0 +1,294 @@
+<div class="flex flex-col flex-auto gap-4 cursor-pointer">
+    <div class="bg-card">
+        <div class="flex flex-col w-full max-w-screen-xl mx-auto px-6 sm:px-8 ">
+            <div class="flex flex-col sm:flex-row flex-auto sm:items-center min-w-0 my-8 sm:my-12">
+                <div class="flex flex-auto items-center min-w-0 ">
+                    <div class="flex-0 w-16 h-16 rounded-full overflow-hidden">
+                        <img class="w-full h-full object-cover" src="assets/icons/profile.png">
+                    </div>
+                    <div class="flex flex-col min-w-0 ml-4">
+                        <div class="text-2xl md:text-5xl font-semibold tracking-tight leading-7 md:leading-10 truncate">
+                            Welcome back, Admin!</div>
+                        <div class="flex items-center">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:bell'"></mat-icon>
+                            <div class="ml-1.5 leading-6 truncate text-secondary">You have 2 new messages</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center ml-4">
+            <div class="px-4 py-2 rounded-tl-xl overflow-hidden bg-hover">
+                <div class="sm:text-lg leading-6 truncate">{{selectedDashboard}}</div>
+            </div>
+            <div class="ml-px rounded-tr-xl bg-hover">
+                <button [matMenuTriggerFor]="projectsMenu" mat-icon-button>
+                   <mat-icon svgIcon="heroicons_solid:chevron-down"></mat-icon>
+                </button>
+                <mat-menu #projectsMenu="matMenu">
+                    <button mat-menu-item (click)="selectedDashboard=dashboardType.Election;isElection=true">Elections
+                    </button>
+                    <button mat-menu-item
+                        (click)="selectedDashboard=dashboardType.Engagement;isElection=false">Engagements
+                    </button>
+
+                </mat-menu>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col flex-auto gap-4 p-4 cursor-pointer"  @slideInLeft *ngIf="isElection">
+        <div class="grid grid-cols-1 sm:grid-cols-8 gap-6 w-full min-w-0">
+            <!-- Budget distribution -->
+            <div
+                class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="text-lg font-medium tracking-tight leading-6 truncate">Election Details</div>
+                <div class="flex mt-4 flex-row justify-between items-center flex-auto gap-2 cursor-pointer">
+                    <button class="mat-button-toggle-button mat-primary mat-focus-indicator" mat-flat-button>
+                        <span>
+                            {{'Latest Results' | translate}}
+                        </span>
+                    </button>
+                    <div class="flex flex-row items-center flex-initial gap-5 cursor-pointer">
+                        <span>{{'Total Responses' | translate}}</span>
+                        <label
+                            class="text-2xl font-semibold tracking-tight leading-tight total-customers-color">45,000</label>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto">
+                    <ngx-charts-pie-chart [view]="view" [scheme]="colorScheme" [results]="single" [gradient]="gradient"
+                        [legend]="showLegend" [legendPosition]="legendPosition" [labels]="showLabels"
+                        [doughnut]="isDoughnut">
+                        <!-- (select)="onSelect($event)" (activate)="onActivate($event)" -->
+                        <!-- (deactivate)="onDeactivate($event)" -->
+                    </ngx-charts-pie-chart>
+                </div>
+            </div>
+            <!-- Expense -->
+            <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
+                <!-- Weekly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Upcoming Elections</div>
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                55
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Closed Elections</div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                24
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Yearly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Total Available Users
+                        </div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                500000
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
+                <!-- Weekly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Total Active Users</div>
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                45000
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Targeted Elections</div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                44
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Yearly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Public Elections
+                        </div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                11
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Budget details -->
+
+        </div>
+    </div>
+    <div class="flex flex-col flex-auto gap-4 p-4 cursor-pointer"  @slideInLeft *ngIf="!isElection">
+        <div class="grid grid-cols-1 sm:grid-cols-8 gap-6 w-full min-w-0">
+            <!-- Budget distribution -->
+            <div
+                class="sm:col-span-3 lg:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                <div class="text-lg font-medium tracking-tight leading-6 truncate">Engagement Details</div>
+                <div class="flex mt-4 flex-row justify-between items-center flex-auto gap-2 cursor-pointer">
+                    <button class="mat-button-toggle-button mat-primary mat-focus-indicator" mat-flat-button>
+                        <span>
+                            {{'Latest Results' | translate}}
+                        </span>
+                    </button>
+                    <div class="flex flex-row items-center flex-initial gap-5 cursor-pointer">
+                        <span>{{'Total Responses' | translate}}</span>
+                        <label
+                            class="text-2xl font-semibold tracking-tight leading-tight total-customers-color">45,000</label>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-auto">
+                    <ngx-charts-pie-chart [view]="view" [scheme]="colorScheme" [results]="single" [gradient]="gradient"
+                        [legend]="showLegend" [legendPosition]="legendPosition" [labels]="showLabels"
+                        [doughnut]="isDoughnut">
+                        <!-- (select)="onSelect($event)" (activate)="onActivate($event)" -->
+                        <!-- (deactivate)="onDeactivate($event)" -->
+                    </ngx-charts-pie-chart>
+                </div>
+            </div>
+            <!-- Expense -->
+            <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
+                <!-- Weekly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Upcoming Engagements
+                        </div>
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                55
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Closed Engagements</div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                24
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Yearly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Total Available Users
+                        </div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                500000
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="sm:col-span-3 lg:col-span-2 grid grid-cols-1 gap-y-6">
+                <!-- Weekly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Total Active Users</div>
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                45000
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Targeted Engagements
+                        </div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                44
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                <!-- Yearly expenses -->
+                <div class="sm:col-span-2 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden">
+                    <div class="flex items-start justify-between">
+                        <div class="text-lg font-medium tracking-tight leading-6 truncate">Public Engagements
+                        </div>
+
+                    </div>
+                    <div class="flex self-center m-auto">
+                        <div class="flex flex-col">
+                            <div class=" text-4xl font-bold tracking-tight">
+                                11
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!-- Budget details -->
+
+        </div>
+    </div>
+</div>
