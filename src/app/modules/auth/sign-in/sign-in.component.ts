@@ -71,7 +71,7 @@ export class AuthSignInComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
         let form = this.signInNgForm.value;
-        if (form.email == 'veras@test.com' && form.password == 'veras@123') {
+        if (form.email == 'abcd@test.com' && form.password == 'abcd@123') {
             localStorage.setItem(
                 'access_token',
                 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE0NjUzNDU3LCJqdGkiOiIyMzU2MGI2ZDYwMTM0MzMyYTZkYThlOWUwZDJiMWQwNCIsInVzZXJfaWQiOjJ9.vhQz8OLPObz78hJ_No_UwE128t4ucP-TBBu-tI4_RYM'

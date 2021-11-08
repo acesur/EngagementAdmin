@@ -14,15 +14,15 @@ export class BillingComponent implements OnInit {
     cardDetails = [
         {
             card_name: 'Debit Card ******3434',
-            name: 'Veras Technologies LLC',
+            name: 'ABCD Technologies LLC',
         },
         {
             card_name: 'Credit Card ******4343',
-            name: 'Veras Technologies LLC',
+            name: 'ABCD Technologies LLC',
         },
         {
             card_name: 'Saving ******0101',
-            name: 'Veras Technologies LLC',
+            name: 'ABCD Technologies LLC',
         },
     ];
     constructor() {}
