@@ -18,6 +18,14 @@ export class ManageFeedbackService{
         this.apiDomain = this.sharedService.apiDomain;
     }
 
+    getFeedbackDetail(id){
+        return this.apiService.get(
+            `${API_URLS.Feedbacks}${id}`,
+            undefined,
+            undefined
+        );
+    }
+
     addFeedback(form){
         return this.apiService.post(`${API_URLS.Feedbacks}`,form, undefined);
     }
@@ -26,6 +34,13 @@ export class ManageFeedbackService{
             `${API_URLS.Feedbacks}${id}/`,
             form,
             undefined
-        )
+        );
+    }
+    deleteFeedback(id){
+        return this.apiService.delete(
+            `${API_URLS.Feedbacks}${id}`,
+            undefined,
+            undefined
+        );
     }
 }

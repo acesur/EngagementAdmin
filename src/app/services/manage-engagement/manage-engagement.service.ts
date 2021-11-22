@@ -18,6 +18,14 @@ export class ManageEngagementService{
         this.apiDomain = this.sharedService.apiDomain;
     }
 
+    getEngagementDetail(id){
+        return this.apiService.get(
+            `${API_URLS.Engagements}${id}`,
+            undefined,
+            undefined
+        );
+    }
+
     addEngagement(form){
         return this.apiService.post(`${API_URLS.Engagements}`, form, undefined);
     }
@@ -26,6 +34,13 @@ export class ManageEngagementService{
             `${API_URLS.Engagements}${id}/`,
             form,
             undefined
-        )
+        );
+    }
+    deleteEngagement(id){
+        return this.apiService.delete(
+            `${API_URLS.Engagements}${id}`,
+            undefined,
+            undefined
+        );
     }
 }

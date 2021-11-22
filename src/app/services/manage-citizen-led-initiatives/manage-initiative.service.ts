@@ -18,6 +18,13 @@ export class ManageInitiativeService{
     ){
         this.apiDomain = this.sharedService.apiDomain;
     }
+    getInitiativeDetail(id){
+        return this.apiService.get(
+            `${API_URLS.Initiatives}${id}`,
+            undefined,
+            undefined
+        );
+    }
 
     addInitiative(form){
         return this.apiService.post(`${API_URLS.Initiatives}`, form, undefined);
@@ -27,6 +34,13 @@ export class ManageInitiativeService{
             `${API_URLS.Initiatives}${id}/`,
             form,
             undefined
-        )
+        );
+    }
+    deleteInitiative(id){
+        return this.apiService.delete(
+            `${API_URLS.Initiatives}${id}`,
+            undefined,
+            undefined
+        );
     }
 }

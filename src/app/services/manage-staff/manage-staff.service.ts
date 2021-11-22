@@ -59,4 +59,12 @@ export class ManageStaffService{
         );
     }
 
+    deleteStaff(id){
+        return this.apiService.delete(
+            `${API_URLS.Staffs}${id}`,
+            undefined,
+            undefined
+        );
+    }
+
 }

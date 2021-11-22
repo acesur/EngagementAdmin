@@ -20,6 +20,14 @@ export class ManageElectionService{
     this.apiDomain = this.sharedService.apiDomain;
    }
 
+   getElectionDetail(id){
+    return this.apiService.get(
+        `${API_URLS.Elections}${id}`,
+        undefined,
+        undefined
+    );
+   }
+
    addElection(form){
     return this.apiService.post(`${API_URLS.Elections}`, form, undefined);
    }
@@ -28,7 +36,13 @@ export class ManageElectionService{
         `${API_URLS.Elections}${id}/`,
         form,
         undefined
-    )
-
+    );
+   }
+   deleteElection(id){
+    return this.apiService.delete(
+        `${API_URLS.Elections}${id}`,
+        undefined,
+        undefined
+    );
    }
 }
