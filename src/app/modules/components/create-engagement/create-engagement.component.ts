@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
@@ -30,11 +30,13 @@ export class CreateEngagementComponent implements OnInit {
     public countryControl: FormControl = new FormControl();
     protected _onDestroy = new Subject<void>();
     public filteredCountry: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+    @ViewChild('UploadFileInput') uploadFileInput: ElementRef;
+    myfilename = 'select File';
     id: any = '';
     breadcrumbs = [];
     businessCategory = [];
     bankNames = [];
-    merchantDetails: any;
+    engagementDetails: any;
     countryList = [];
     afterViewInit = false;
     isLoadingEmail: boolean = false;
@@ -82,136 +84,73 @@ export class CreateEngagementComponent implements OnInit {
     tes() {
         alert('dw');
     }
+    fileChangeEvent(fileInput: any){
+        if(fileInput.target.files && fileInput.target.files[0]){
+            this.myfilename = '';
+            Array.from(fileInput.target.files).forEach((file: File) => {
+                console.log(file);
+                this.myfilename += file.name + ',';
+            });
+            const reader = new FileReader();
+            reader.onload = (e: any) => {
+                const image = new Image();
+                image.src = e.target.result;
+                image.onload = rs => {
+                    const convertImageToBase64 = e.target.result;
+                }
+            }
+            reader.readAsDataURL(fileInput.target.files[0]);
+            this.uploadFileInput.nativeElement.value = "";
+        }
+        else{
+        this.myfilename = 'Select File';
+    }
+    }
 
     ngAfterViewInit() {}
 
     async formInit() {
         this.form = this.fb.group({
-            name: [
-                this.merchantDetails ? this.merchantDetails.name : null,
+            engagement_name: [
+                this.engagementDetails ? this.engagementDetails.engagement_name : null,
                 [Validators.required],
             ],
-            email: [
-                this.merchantDetails ? this.merchantDetails.email : null,
-                [Validators.required, Validators.email],
+            engagement_description: [
+                this.engagementDetails ? this.engagementDetails.engagement_description : null,
+                [Validators.required],
             ],
-            contact_no: [
-                this.merchantDetails ? this.merchantDetails.contact_no : null,
-                [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)],
+            participants: [
+                this.engagementDetails ? this.engagementDetails.participants : null,
+                [Validators.required],
             ],
-            address: [
-                this.merchantDetails ? this.merchantDetails.address : null,
+            start_date: [
+                this.engagementDetails ? this.engagementDetails.start_date : null,
             ],
-            city: [this.merchantDetails ? this.merchantDetails.city : null],
-            country_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.country
-                        ? this.merchantDetails.country
-                        : null
+            end_date: [this.engagementDetails ? this.engagementDetails.end_date : null],
+            start_time: [
+                this.engagementDetails
+                    ? this.engagementDetails.start_time
                     : null,
             ],
-            pb_no: [this.merchantDetails ? this.merchantDetails.pb_no : null],
-            // vat_registration: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.vat_registration
-            //         : null,
-            //     [Validators.required],
-            // ],
-            // vat_issue_date: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.vat_issue_date
-            //         : null,
-            //     [Validators.required],
-            // ],
-            trade_license_number: [
-                this.merchantDetails
-                    ? this.merchantDetails.trade_license_number
+            end_time: [this.engagementDetails ? this.engagementDetails.end_time : null],
+            option: [
+                this.engagementDetails
+                    ? this.engagementDetails.option
                     : null,
                 [Validators.required],
             ],
-            license_issue_date: [
-                this.merchantDetails
-                    ? this.merchantDetails.license_issue_date
+            upload_image: [
+                this.engagementDetails
+                    ? this.engagementDetails.upload_image
                     : null,
                 [Validators.required],
             ],
-            license_expiry_date: [
-                this.merchantDetails
-                    ? this.merchantDetails.license_expiry_date
+            security_level: [
+                this.engagementDetails
+                    ? this.engagementDetails.security_level
                     : null,
                 [Validators.required],
-            ],
-            // license_issue_country_id: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.license_issue_country
-            //             ? this.merchantDetails.license_issue_country.id
-            //             : null
-            //         : null,
-            // ],
-            authorized_signatory_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.authorized_signatory_id
-                    : null,
-                [Validators.required],
-            ],
-            id_expiry_date: [
-                this.merchantDetails
-                    ? this.merchantDetails.id_expiry_date
-                    : null,
-                [Validators.required],
-            ],
-            id_dob: [
-                this.merchantDetails ? this.merchantDetails.id_dob : null,
-                [Validators.required],
-            ],
-
-            id_name: [
-                this.merchantDetails ? this.merchantDetails.id_name : null,
-                [Validators.required],
-            ],
-            // id_issue_country_id: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.id_issue_country
-            //             ? this.merchantDetails.id_issue_country.id
-            //             : null
-            //         : null,
-            //     [Validators.required],
-            // ],
-            bank_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank
-                        ? this.merchantDetails.bank.id
-                        : null
-                    : null,
-                [Validators.required],
-            ],
-            bank_account_no: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank_account_no
-                    : null,
-                [Validators.required],
-            ],
-            iban_no: [
-                this.merchantDetails ? this.merchantDetails.iban_no : null,
-                [Validators.required],
-            ],
-            bank_account_name: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank_account_name
-                    : null,
-                [Validators.required],
-            ],
-            logo: [this.merchantDetails ? this.merchantDetails.logo : null],
-            business_category_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.business_category
-                        ? this.merchantDetails.business_category.id
-                            ? this.merchantDetails.business_category.id
-                            : ''
-                        : ''
-                    : '',
-                [Validators.required],
-            ],
+            ]
         });
     }
 
@@ -317,6 +256,7 @@ export class CreateEngagementComponent implements OnInit {
                             }
                         );
                         dialogRef.afterClosed().subscribe(async (resp) => {
+
                             // if (resp) {
                             //     let add = await this.outletsService
                             //         .addMerchants(form)
@@ -386,8 +326,8 @@ export class CreateEngagementComponent implements OnInit {
     getDocument() {
         let documents = [];
         try {
-            if (this.merchantDetails && this.merchantDetails.documents) {
-                documents = this.merchantDetails.documents;
+            if (this.engagementDetails && this.engagementDetails.documents) {
+                documents = this.engagementDetails.documents;
             }
             return documents;
         } catch {}

@@ -31,11 +31,11 @@ export class ApiService {
         private router: Router
     ) {
         this.BASE_URL = environment.server_url;
-        // this.headersObject = {
-        //     "Content-Type": "application/json",
-        //     Authorization: `Bearer ${this.token}`,
+         this.headersObject = {
+             "Content-Type": "application/json",
+             Authorization: `Bearer ${this.token}`,
         //     "x-api-key": "paydoapps-key-cbe806aa-e93a-4a7e-8484-c0cac8e69cad",
-        // };
+         };
     }
 
     public get(
@@ -259,6 +259,6 @@ export class ApiService {
 
     unAuthorized() {
         this.router.navigate([AppRoutes.Error]);
-        
+
     }
 }

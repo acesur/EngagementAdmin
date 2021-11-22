@@ -81,138 +81,59 @@ export class CreateUserComponent implements OnInit {
     tes() {
         alert('dw');
     }
+    /* onFileChange(event){
+        const reader = new FileReader();
+        if(event.target.files && event.target.files.length){
+        const[image] = event.target.files;
+        reader.readAsDataURL(image);
+        }
+    } */
 
     ngAfterViewInit() {}
 
     async formInit() {
         this.form = this.fb.group({
-            name: [
-                this.merchantDetails ? this.merchantDetails.name : null,
+            user_firstname: [
+                this.merchantDetails ? this.merchantDetails.user_firstname : null,
+                [Validators.required],
+            ],
+             user_lastname: [
+                this.merchantDetails ? this.merchantDetails.user_lastname : null,
                 [Validators.required],
             ],
             email: [
                 this.merchantDetails ? this.merchantDetails.email : null,
                 [Validators.required, Validators.email],
             ],
-            contact_no: [
-                this.merchantDetails ? this.merchantDetails.contact_no : null,
+            contact_number: [
+                this.merchantDetails ? this.merchantDetails.contact_number : null,
                 [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)],
             ],
-            address: [
-                this.merchantDetails ? this.merchantDetails.address : null,
+            ResidenceID: [
+                this.merchantDetails ? this.merchantDetails.ResidenceID : null,
             ],
             city: [this.merchantDetails ? this.merchantDetails.city : null],
-            country_id: [
+            region: [
                 this.merchantDetails
-                    ? this.merchantDetails.country
-                        ? this.merchantDetails.country
-                        : null
-                    : null,
+                    ? this.merchantDetails.region : null,
             ],
-            pb_no: [this.merchantDetails ? this.merchantDetails.pb_no : null],
-            // vat_registration: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.vat_registration
-            //         : null,
-            //     [Validators.required],
-            // ],
-            // vat_issue_date: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.vat_issue_date
-            //         : null,
-            //     [Validators.required],
-            // ],
-            trade_license_number: [
+            postalcode: [this.merchantDetails ? this.merchantDetails.postalcode : null],
+            participants: [
                 this.merchantDetails
-                    ? this.merchantDetails.trade_license_number
+                    ? this.merchantDetails.participants
                     : null,
                 [Validators.required],
             ],
-            license_issue_date: [
+            upload_image: [
                 this.merchantDetails
-                    ? this.merchantDetails.license_issue_date
+                    ? this.merchantDetails.upload_image
                     : null,
                 [Validators.required],
-            ],
-            license_expiry_date: [
-                this.merchantDetails
-                    ? this.merchantDetails.license_expiry_date
-                    : null,
-                [Validators.required],
-            ],
-            // license_issue_country_id: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.license_issue_country
-            //             ? this.merchantDetails.license_issue_country.id
-            //             : null
-            //         : null,
-            // ],
-            authorized_signatory_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.authorized_signatory_id
-                    : null,
-                [Validators.required],
-            ],
-            id_expiry_date: [
-                this.merchantDetails
-                    ? this.merchantDetails.id_expiry_date
-                    : null,
-                [Validators.required],
-            ],
-            id_dob: [
-                this.merchantDetails ? this.merchantDetails.id_dob : null,
-                [Validators.required],
-            ],
+            ]
 
-            id_name: [
-                this.merchantDetails ? this.merchantDetails.id_name : null,
-                [Validators.required],
-            ],
-            // id_issue_country_id: [
-            //     this.merchantDetails
-            //         ? this.merchantDetails.id_issue_country
-            //             ? this.merchantDetails.id_issue_country.id
-            //             : null
-            //         : null,
-            //     [Validators.required],
-            // ],
-            bank_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank
-                        ? this.merchantDetails.bank.id
-                        : null
-                    : null,
-                [Validators.required],
-            ],
-            bank_account_no: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank_account_no
-                    : null,
-                [Validators.required],
-            ],
-            iban_no: [
-                this.merchantDetails ? this.merchantDetails.iban_no : null,
-                [Validators.required],
-            ],
-            bank_account_name: [
-                this.merchantDetails
-                    ? this.merchantDetails.bank_account_name
-                    : null,
-                [Validators.required],
-            ],
-            logo: [this.merchantDetails ? this.merchantDetails.logo : null],
-            business_category_id: [
-                this.merchantDetails
-                    ? this.merchantDetails.business_category
-                        ? this.merchantDetails.business_category.id
-                            ? this.merchantDetails.business_category.id
-                            : ''
-                        : ''
-                    : '',
-                [Validators.required],
-            ],
         });
     }
+
 
     isEmailError() {
         return this.emailError;
@@ -258,6 +179,8 @@ export class CreateUserComponent implements OnInit {
     deleteLogo() {
         this.form.controls.logo.setValue(null);
     }
+
+
 
     save() {
         debugger;

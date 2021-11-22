@@ -27,8 +27,8 @@
                                             {{'Citizen -Led-Initiatives Description' | translate}}
                                             <span class="required-field">*</span>
                                         </mat-label>
-                                        <input matInput formControlName="name">
-                                        <mat-error *ngIf="form.get('name').hasError('required')">
+                                        <input matInput formControlName="citizenledinitiative_name">
+                                        <mat-error *ngIf="form.get('citizenledinitiative_name').hasError('required')">
                                             {{'Citizen -Led-Initiatives Description is required' | translate}}
                                         </mat-error>
                                     </mat-form-field>
@@ -37,7 +37,7 @@
                                 <div class="col-span-4 sm:col-span-1 flex flex-col px-1 ">
                                     <mat-form-field>
                                         <mat-label>{{'Engagements' | translate}}</mat-label>
-                                        <mat-select>
+                                        <mat-select formControlName="participants">
                                             <mat-option [value]="1">
                                                 test1
                                             </mat-option>
@@ -54,7 +54,7 @@
                                 <div class="col-span-4 sm:col-span-1 flex flex-col px-1">
                                     <mat-form-field>
                                         <mat-label>{{'Start Date' | translate}}</mat-label>
-                                        <input matInput [matDatepicker]="picker">
+                                        <input formControlName="start_date" matInput [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
                                     </mat-form-field>
@@ -62,7 +62,7 @@
                                 <div class="col-span-4 sm:col-span-1 flex flex-col px-1">
                                     <mat-form-field>
                                         <mat-label>{{'End Date' | translate}}</mat-label>
-                                        <input matInput [matDatepicker]="picker1">
+                                        <input formControlName="end_date" matInput [matDatepicker]="picker1">
                                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                                         <mat-datepicker #picker1></mat-datepicker>
                                     </mat-form-field>
@@ -99,11 +99,48 @@
 
                                     </mat-form-field>
                                 </div>
+                                <div class="col-span-4 sm:col-span-1 flex flex-col px-1">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label (click)="$event.preventDefault()">{{'Candidate' | translate}}
+
+                                        </mat-label>
+                                        <input matInput formControlName="option">
+                                        <div>
+                                            <mat-icon class="cursor-pointer" svgIcon="mat_outline:add"></mat-icon>
+                                        </div>
+                                    </mat-form-field>
+                                </div>
+                                 <div class="col-span-3 sm:col-span-1 flex flex-col px-1 ">
+                                    <mat-form-field>
+                                        <mat-label>{{'Security Level' | translate}}</mat-label>
+                                        <mat-select formControlName="security_level">
+                                            <mat-option [value]="1">
+                                                Highly Secure
+                                            </mat-option>
+                                            <mat-option [value]="2">
+                                                Moderately Secure
+                                            </mat-option>
+                                            <mat-option [value]="3">
+                                                Less Secure
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>
+                                            {{'Upload File' | translate}}
+                                        </mat-label>
+                                            <input matInput [(ngModel)]="myfilename" readonly name="electionImage"/>
+                                        <input formControlName="upload_image" type="file" id="fileUpload" (change)="fileChangeEvent($event)"
+                                               #UploadFileInput multiple="multiple" accept="image/*"/>
+                                    </mat-form-field>
+                                </div>
                                 <div class="col-span-4 sm:col-span-3 flex flex-col px-1">
                                     <mat-form-field class="example-full-width">
                                         <mat-label  >{{'Description' | translate}}
                                         </mat-label>
-                                        <textarea rows="8" matInput formControlName="address"></textarea>
+                                        <textarea rows="8" matInput formControlName="citizenledinitiative_description"></textarea>
                                     </mat-form-field>
                                 </div>
                             </div>

@@ -11,7 +11,7 @@
 
         </div>
         <hr class="border-b m-0 border-color">
-        <div class="flex sm:flex-row flex-col p-4 gap-4">
+        <div [formGroup]='form' class="flex sm:flex-row flex-col p-4 gap-4">
             <div class="flex flex-col gap-y-4" style="flex: 0 0 70%;">
                 <div class="flex flex-col bg-card shadow p-4">
                     <div class="text-xl font-bold tracking-tight highlight-text-color py-4 ">
@@ -27,8 +27,8 @@
                                             {{'Election Name' | translate}}
                                             <span class="required-field">*</span>
                                         </mat-label>
-                                        <input matInput formControlName="name">
-                                        <mat-error *ngIf="form.get('name').hasError('required')">
+                                        <input matInput formControlName="election_name">
+                                        <mat-error *ngIf="form.get('election_name').hasError('required')">
                                             {{'Election Name is required' | translate}}
                                         </mat-error>
                                     </mat-form-field>
@@ -37,7 +37,7 @@
                                 <div class="col-span-3 sm:col-span-1 flex flex-col px-1 ">
                                     <mat-form-field>
                                         <mat-label>{{'Voter Engagements' | translate}}</mat-label>
-                                        <mat-select>
+                                        <mat-select formControlName="participants">
                                             <mat-option [value]="1">
                                                 test1
                                             </mat-option>
@@ -53,10 +53,18 @@
                                 <!-- Re-opened -->
                                 <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
                                     <mat-form-field>
-                                        <mat-label>{{'Election Date' | translate}}</mat-label>
-                                        <input matInput [matDatepicker]="picker">
+                                        <mat-label>{{'Start Date' | translate}}</mat-label>
+                                        <input formControlName="start_date" matInput [matDatepicker]="picker">
                                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                                         <mat-datepicker #picker></mat-datepicker>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
+                                    <mat-form-field>
+                                        <mat-label>{{'End Date' | translate}}</mat-label>
+                                        <input formControlName="end_date" matInput [matDatepicker]="picker2">
+                                        <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker2></mat-datepicker>
                                     </mat-form-field>
                                 </div>
                                 <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
@@ -64,7 +72,7 @@
                                         <mat-label (click)="$event.preventDefault()">{{'Candidate' | translate}}
 
                                         </mat-label>
-                                        <input matInput formControlName="address">
+                                        <input matInput formControlName="option">
                                         <div>
                                             <mat-icon class="cursor-pointer" svgIcon="mat_outline:add"></mat-icon>
                                         </div>
@@ -75,7 +83,7 @@
                                         <mat-label>{{'Start Time' | translate}}</mat-label>
 
                                         <!-- The timepicker input -->
-                                        <input matTimepicker #t="matTimepicker" [ngModelOptions]="{standalone: true}" #time="ngModel" [strict]="false"
+                                        <input  matTimepicker #t="matTimepicker" [ngModelOptions]="{standalone: true}" #time="ngModel" [strict]="false"
                                             id="timepicker-example" mode="24h" [ngModel]="defaultValue"
                                             placeholder="Please select time..." name="time">
 
@@ -105,7 +113,7 @@
                                 <div class="col-span-3 sm:col-span-1 flex flex-col px-1 ">
                                     <mat-form-field>
                                         <mat-label>{{'Security Level' | translate}}</mat-label>
-                                        <mat-select>
+                                        <mat-select formControlName="security_level">
                                             <mat-option [value]="1">
                                                 Highly Secure
                                             </mat-option>
@@ -118,28 +126,29 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>
+                                            {{'Upload File' | translate}}
+                                        </mat-label>
+                                            <input matInput [(ngModel)]="myfilename" readonly name="electionImage"/>
+                                        <input formControlName="upload_image" type="file" id="fileUpload" (change)="fileChangeEvent($event)"
+                                               #UploadFileInput multiple="multiple" accept="image/*"/>
+                                    </mat-form-field>
+                                </div>
                                 <div class="col-span-3 sm:col-span-3 flex flex-col px-1">
                                     <mat-form-field class="example-full-width">
                                         <mat-label  >{{'Description' | translate}}
                                         </mat-label>
-                                        <textarea rows="8" matInput formControlName="address"></textarea>
+                                        <textarea rows="8" matInput formControlName="election_description"></textarea>
                                     </mat-form-field>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col flex-auto bg-card shadow p-4" *ngIf="afterViewInit">
-                <div class="text-xl font-bold tracking-tight highlight-text-color py-4 ">
-                    {{'Documents' | translate}}
-                </div>
-                <div class="flex flex-col flex-auto gap-1">
-                    <app-documents [id]="id" [documents]="getDocument()" [type]="'account'"></app-documents>
-                </div>
-            </div>
-        </div>
         <div class="flex flex-row gap-2 flex-initial p-4 justify-end">
             <button
                 class="mat-focus-indicator border-btn  rounded-lg min-h-0 h-9 fuse-mat-button-large mat-flat-button mat-button-base"
@@ -153,4 +162,5 @@
             </button>
         </div>
     </div>
+</div>
 </div>

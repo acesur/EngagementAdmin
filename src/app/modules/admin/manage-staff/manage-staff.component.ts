@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FuseAnimations } from '@fuse/animations';
 import { TranslateService } from '@ngx-translate/core';
 import { AppRoutes } from 'app/AppRoutes';
-import { ManageUserService } from 'app/services/manage-user/manage-user.service';
+import { ManageStaffService } from 'app/services/manage-staff/manage-staff.service';
 import { AlertModalComponent } from 'app/modules/components/alert-modal/alert-modal.component';
 import { TranslationService } from 'app/services/translationService';
 import { UtilitiesService } from 'app/services/utilitiesService';
@@ -27,12 +27,13 @@ export enum TabStatus {
     animations: FuseAnimations,
 })
 export class ManageStaffComponent implements OnInit {
-    contracts = [];
+    staffs = [];
+    staffsList = [];
     breadcrumbs = [];
     page = new Pagination().page;
     tabStatus = TabStatus;
-    productsCount: number = 0;
-    productsTableColumns: string[] = [
+    staffsCount: number = 0;
+    staffsTableColumns: string[] = [
         'slno',
         'user_name',
         'email',
@@ -61,6 +62,7 @@ export class ManageStaffComponent implements OnInit {
         private fb: FormBuilder,
         public authUSerService: AuthUSerService,
         private translateService: TranslateService,
+        private manageStaffService: ManageStaffService
     ) {
         // this.activatedRoute.queryParams.subscribe((data) => {
         //     if (data.customer) {
@@ -82,7 +84,7 @@ export class ManageStaffComponent implements OnInit {
     }
 
     getDisplayedColumns() {
-        return this.productsTableColumns;
+        return this.staffsTableColumns;
     }
 
     async ngOnInit(): Promise<void> {
@@ -106,6 +108,27 @@ export class ManageStaffComponent implements OnInit {
         //     this.page = new Pagination().page
         //     this.getContracts();
         // });
+    }
+
+    async getStaffs(
+        limit = this.page.pageSize,
+        offset = this.page.offset,
+        form = this.form.controls
+    ): Promise<void>{
+        try{
+            this.utilitiesService.startLoader();
+            const staffs = await this.manageStaffService
+                .getStaffs(limit, offset, this.searchKey, form)
+                .toPromise();
+                if(staffs){
+                    this.page.length = staffs.count;
+                    this.staffsList = staffs.results;
+                    this.utilitiesService.stopLoader();
+                }
+        }catch{
+            this.utilitiesService.stopLoader();
+        }finally{
+        }
     }
 
     // async getContracts(
@@ -157,6 +180,7 @@ export class ManageStaffComponent implements OnInit {
         this.page.pageSize = event.pageSize;
         this.page.pageIndex = event.pageIndex;
         this.page.offset = this.page.pageIndex * this.page.pageSize;
+        this.getStaffs();
         // this.getContracts();
     }
     // `${AppRoutes.Contract}`,

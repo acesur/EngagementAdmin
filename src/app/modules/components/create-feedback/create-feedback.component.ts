@@ -16,6 +16,7 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { DocumentsComponent } from '../documents/documents.component';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { FuseAnimations } from '@fuse/animations';
+import { ManageFeedbackService } from 'app/services/manage-feedback/manage-feedback.service';
 
 @Component({
   selector: 'app-create-feedback',
@@ -35,7 +36,7 @@ export class CreateFeedbackComponent implements OnInit {
   breadcrumbs = [];
   businessCategory = [];
   bankNames = [];
-  merchantDetails: any;
+  feedbackDetails: any;
   countryList = [];
   afterViewInit = false;
   isLoadingEmail: boolean = false;
@@ -56,7 +57,9 @@ export class CreateFeedbackComponent implements OnInit {
       public translationService: TranslationService,
       private _location: Location,
       private translateService: TranslateService,
-      private dialog: MatDialog // private outletsService: OutletsService, // private customerService: CustomerService, // private validateInputs: ValidateInputs,
+      private dialog: MatDialog,
+      private manageFeedbackService: ManageFeedbackService
+       // private outletsService: OutletsService, // private customerService: CustomerService, // private validateInputs: ValidateInputs,
   ) // private additionalService: AdditionalService,
   // private settingsService: SettingsService
   {
@@ -88,131 +91,46 @@ export class CreateFeedbackComponent implements OnInit {
 
   async formInit() {
       this.form = this.fb.group({
-          name: [
-              this.merchantDetails ? this.merchantDetails.name : null,
+          internalfeedback_name: [
+              this.feedbackDetails ? this.feedbackDetails.internalfeedback_name : null,
               [Validators.required],
           ],
-          email: [
-              this.merchantDetails ? this.merchantDetails.email : null,
-              [Validators.required, Validators.email],
+          internalfeedback_description: [
+              this.feedbackDetails ? this.feedbackDetails.internalfeedback_description : null,
+              [Validators.required],
           ],
-          contact_no: [
-              this.merchantDetails ? this.merchantDetails.contact_no : null,
-              [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)],
+          participants: [
+              this.feedbackDetails ? this.feedbackDetails.participants : null,
+              [Validators.required],
           ],
-          address: [
-              this.merchantDetails ? this.merchantDetails.address : null,
+          start_date: [
+              this.feedbackDetails ? this.feedbackDetails.start_date : null,
           ],
-          city: [this.merchantDetails ? this.merchantDetails.city : null],
-          country_id: [
-              this.merchantDetails
-                  ? this.merchantDetails.country
-                      ? this.merchantDetails.country
-                      : null
+          end_date: [this.feedbackDetails ? this.feedbackDetails.end_date : null],
+          start_time: [
+              this.feedbackDetails
+                  ? this.feedbackDetails.start_time
                   : null,
           ],
-          pb_no: [this.merchantDetails ? this.merchantDetails.pb_no : null],
-          // vat_registration: [
-          //     this.merchantDetails
-          //         ? this.merchantDetails.vat_registration
-          //         : null,
-          //     [Validators.required],
-          // ],
-          // vat_issue_date: [
-          //     this.merchantDetails
-          //         ? this.merchantDetails.vat_issue_date
-          //         : null,
-          //     [Validators.required],
-          // ],
-          trade_license_number: [
-              this.merchantDetails
-                  ? this.merchantDetails.trade_license_number
+          end_time: [this.feedbackDetails ? this.feedbackDetails.end_time : null],
+          option: [
+              this.feedbackDetails
+                  ? this.feedbackDetails.option
                   : null,
               [Validators.required],
           ],
-          license_issue_date: [
-              this.merchantDetails
-                  ? this.merchantDetails.license_issue_date
+          upload_image: [
+              this.feedbackDetails
+                  ? this.feedbackDetails.upload_image
                   : null,
               [Validators.required],
           ],
-          license_expiry_date: [
-              this.merchantDetails
-                  ? this.merchantDetails.license_expiry_date
+          security_level: [
+              this.feedbackDetails
+                  ? this.feedbackDetails.security_level
                   : null,
               [Validators.required],
-          ],
-          // license_issue_country_id: [
-          //     this.merchantDetails
-          //         ? this.merchantDetails.license_issue_country
-          //             ? this.merchantDetails.license_issue_country.id
-          //             : null
-          //         : null,
-          // ],
-          authorized_signatory_id: [
-              this.merchantDetails
-                  ? this.merchantDetails.authorized_signatory_id
-                  : null,
-              [Validators.required],
-          ],
-          id_expiry_date: [
-              this.merchantDetails
-                  ? this.merchantDetails.id_expiry_date
-                  : null,
-              [Validators.required],
-          ],
-          id_dob: [
-              this.merchantDetails ? this.merchantDetails.id_dob : null,
-              [Validators.required],
-          ],
-
-          id_name: [
-              this.merchantDetails ? this.merchantDetails.id_name : null,
-              [Validators.required],
-          ],
-          // id_issue_country_id: [
-          //     this.merchantDetails
-          //         ? this.merchantDetails.id_issue_country
-          //             ? this.merchantDetails.id_issue_country.id
-          //             : null
-          //         : null,
-          //     [Validators.required],
-          // ],
-          bank_id: [
-              this.merchantDetails
-                  ? this.merchantDetails.bank
-                      ? this.merchantDetails.bank.id
-                      : null
-                  : null,
-              [Validators.required],
-          ],
-          bank_account_no: [
-              this.merchantDetails
-                  ? this.merchantDetails.bank_account_no
-                  : null,
-              [Validators.required],
-          ],
-          iban_no: [
-              this.merchantDetails ? this.merchantDetails.iban_no : null,
-              [Validators.required],
-          ],
-          bank_account_name: [
-              this.merchantDetails
-                  ? this.merchantDetails.bank_account_name
-                  : null,
-              [Validators.required],
-          ],
-          logo: [this.merchantDetails ? this.merchantDetails.logo : null],
-          business_category_id: [
-              this.merchantDetails
-                  ? this.merchantDetails.business_category
-                      ? this.merchantDetails.business_category.id
-                          ? this.merchantDetails.business_category.id
-                          : ''
-                      : ''
-                  : '',
-              [Validators.required],
-          ],
+          ]
       });
   }
 
@@ -318,6 +236,18 @@ export class CreateFeedbackComponent implements OnInit {
                           }
                       );
                       dialogRef.afterClosed().subscribe(async (resp) => {
+                            if (resp){
+                                let add = await this.manageFeedbackService
+                                    .addFeedback(form)
+                                    .toPromise();
+                                    if (add) {
+                                        let successmsg = this.translateService.instant(
+                                            'Feedback Created Successfully'
+                                        );
+                                        this.utilitiesService.showSuccessToast(successmsg);
+                                        this.route.navigate([AppRoutes.ManageInternalFeedback]);
+                                    }
+                            }
                           // if (resp) {
                           //     let add = await this.outletsService
                           //         .addMerchants(form)
@@ -356,6 +286,18 @@ export class CreateFeedbackComponent implements OnInit {
                           }
                       );
                       dialogRef.afterClosed().subscribe(async (resp) => {
+                        if (resp){
+                            let add = await this.manageFeedbackService
+                                .updateFeedback(form, this.id)
+                                .toPromise();
+                                if (add){
+                                    let successmsg = this.translateService.instant(
+                                        'Feedback updated Successfully'
+                                    );
+                                    this.utilitiesService.showSuccessToast(successmsg);
+                                    this.route.navigate([AppRoutes.ManageInternalFeedback]);
+                                }
+                        }
                           // if (resp) {
                           //     let add = await this.outletsService
                           //         .updateMerchants(form, this.id)
@@ -387,8 +329,8 @@ export class CreateFeedbackComponent implements OnInit {
   getDocument() {
       let documents = [];
       try {
-          if (this.merchantDetails && this.merchantDetails.documents) {
-              documents = this.merchantDetails.documents;
+          if (this.feedbackDetails && this.feedbackDetails.documents) {
+              documents = this.feedbackDetails.documents;
           }
           return documents;
       } catch {}

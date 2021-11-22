@@ -30,6 +30,12 @@ import { ErrorComponent } from './error/error/error.component';
 import { AdditionalService } from './services/additionalService';
 import { SettingsService } from './services/settings/settings.service';
 
+import { MatButtonModule } from '@angular/material/button';
+
+import { MatInputModule } from '@angular/material/input';
+
+
+
 export function tokenGetter() {
     return localStorage.getItem("access_token");
 }
@@ -60,6 +66,10 @@ const routerConfig: ExtraOptions = {
         LayoutModule,
         MatSnackBarModule,
         MatDialogModule,
+
+        MatButtonModule,
+        MatInputModule,
+
         // 3rd party modules
         MarkdownModule.forRoot({}),
         JwtModule.forRoot({

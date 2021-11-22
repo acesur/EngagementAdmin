@@ -9,7 +9,7 @@ import { Location } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
-import { ManageUserService } from 'app/services/manage-user/manage-user.service';
+import { ManageStaffService } from 'app/services/manage-staff/manage-staff.service';
 import { RolesService } from 'app/services/roles/roles.service';
 import { debounceTime } from 'rxjs/operators';
 import { ValidateInputs } from 'app/inputValidation';
@@ -25,7 +25,7 @@ export class CreateStaffComponent implements OnInit {
   id: any = '';
   breadcrumbs = [];
   form: FormGroup;
-  userDetails: any;
+  staffDetails: any;
   roles = [];
   isLoadingEmail: boolean;
   emailError: boolean;
@@ -38,7 +38,7 @@ export class CreateStaffComponent implements OnInit {
       private _location: Location,
       private translateService: TranslateService,
       private dialog: MatDialog,
-      private userService: ManageUserService,
+      private manageStaffService: ManageStaffService,
       private roleService: RolesService,
       private validateInputs: ValidateInputs
   ) {
@@ -73,11 +73,11 @@ export class CreateStaffComponent implements OnInit {
 
   async getDetails() {
       try {
-          const userDetails = await this.userService
-              .getUserDetails(this.id)
+          const staffDetails = await this.manageStaffService
+              .getStaffDetails(this.id)
               .toPromise();
-          if (userDetails) {
-              this.userDetails = userDetails;
+          if (staffDetails) {
+              this.staffDetails = staffDetails;
               this.utilitiesService.stopLoader();
               this.formInit();
           }
@@ -88,21 +88,21 @@ export class CreateStaffComponent implements OnInit {
 
   async formInit() {
       this.form = this.fb.group({
-          first_name: [
-              this.userDetails ? this.userDetails.first_name : null,
+          staff_firstname: [
+              this.staffDetails ? this.staffDetails.staff_firstname : null,
               [Validators.required],
           ],
-          last_name: [this.userDetails ? this.userDetails.last_name : null],
+          staff_lastname: [this.staffDetails ? this.staffDetails.staff_lastname : null],
           email: [
-              this.userDetails ? this.userDetails.email : null,
+              this.staffDetails ? this.staffDetails.email : null,
               [Validators.required, Validators.email],
           ],
-          contact_no: [
-              this.userDetails ? this.userDetails.contact_no : null,
+          contact_number: [
+              this.staffDetails ? this.staffDetails.contact_no : null,
               [Validators.required, Validators.pattern(/^-?(0|[1-9]\d*)?$/)],
           ],
-          role_id: [
-              this.userDetails ? this.userDetails.role.id : null,
+          Role: [
+              this.staffDetails ? this.staffDetails.Role : null,
               [Validators.required],
           ],
       });
@@ -117,9 +117,9 @@ export class CreateStaffComponent implements OnInit {
                       'user',
                       this.id
                   );
-                  await this.setError(value, 'email');   
+                  await this.setError(value, 'email');
               }
-             
+
           });
       if (this.id) {
           this.form.controls.email.disable();
@@ -166,9 +166,9 @@ export class CreateStaffComponent implements OnInit {
   save() {
       if (this.form.valid && !this.emailError) {
           if (this.id) {
-              this.updateUser();
+              this.updateStaff();
           } else {
-              this.addUser();
+              this.addStaff();
           }
       } else {
           for (const key of Object.keys(this.form.controls)) {
@@ -176,7 +176,7 @@ export class CreateStaffComponent implements OnInit {
           }
       }
   }
-  updateUser() {
+  updateStaff() {
       let content = this.translateService.instant(
           'Are you sure, Do you want to update ?'
       );
@@ -194,6 +194,15 @@ export class CreateStaffComponent implements OnInit {
               let form = this.form.value;
               try {
                   this.utilitiesService.startLoader();
+                    const addStaff = this.manageStaffService
+                        .updateStaff(form, this.id)
+                        .toPromise();
+                    if (addStaff) {
+                        let successmsg = this.translateService.instant(
+                            'Staff Updated Successfully'
+                        );
+                        this.utilitiesService.showSuccessToast(successmsg);
+                    }
                   // const addUser = await this.userService
                   //     .updateUser(form, this.id)
                   //     .toPromise();
@@ -211,7 +220,7 @@ export class CreateStaffComponent implements OnInit {
       });
   }
 
-  async addUser() {
+  async addStaff() {
       let content = this.translateService.instant(
           'Are you sure, Do you want to save ?'
       );
@@ -228,17 +237,17 @@ export class CreateStaffComponent implements OnInit {
           if (resp) {
               let form = this.form.value;
               try {
-                  // this.utilitiesService.startLoader();
-                  // const addUser = await this.userService
-                  //     .addUser(form)
-                  //     .toPromise();
-                  // if (addUser) {
-                  //     let successmsg = this.translateService.instant(
-                  //         'User created successfully'
-                  //     );
-                  //     this.utilitiesService.showSuccessToast(successmsg);
-                  //     // this.route.navigate([AppRoutes.ManageUser]);
-                  // }
+                this.utilitiesService.startLoader();
+                const addStaff = await this.manageStaffService
+                    .addStaff(form)
+                    .toPromise();
+                if(addStaff){
+                    let successmsg = this.translateService.instant(
+                        'Staff Created Successfully'
+                    );
+                    this.utilitiesService.showSuccessToast(successmsg);
+                    this.route.navigate([AppRoutes.ManageStaff])
+                }
               } catch {
               } finally {
               }

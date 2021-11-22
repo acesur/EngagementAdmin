@@ -8,7 +8,7 @@
             <span *ngIf="id">{{'Edit Staff' | translate}}</span>
         </div>
         <hr class="border-b m-0 border-color">
-        <div class="flex sm:flex-row flex-col p-4 gap-x-4">
+        <div [formGroup]='form' class="flex sm:flex-row flex-col p-4 gap-x-4">
             <div class="flex flex-col gap-y-4 flex-auto items-center">
                 <div class="flex flex-col bg-card shadow p-4 w-full md:w-3/4">
                     <div class="text-xl font-bold tracking-tight highlight-text-color py-4 ">
@@ -22,8 +22,8 @@
                                     <mat-label>{{'First Name' | translate}}
                                         <span class="required-field">*</span>
                                     </mat-label>
-                                    <input matInput formControlName="first_name">
-                                    <mat-error *ngIf="form.get('first_name').hasError('required')">
+                                    <input matInput formControlName="staff_firstname">
+                                    <mat-error *ngIf="form.get('staff_firstname').hasError('required')">
                                         {{'First Name is required' | translate}}
                                     </mat-error>
                                 </mat-form-field>
@@ -33,7 +33,7 @@
                             <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
                                 <mat-form-field class="example-full-width">
                                     <mat-label>{{'Last Name' | translate}}</mat-label>
-                                    <input matInput formControlName="last_name">
+                                    <input matInput formControlName="staff_lastname">
                                 </mat-form-field>
                             </div>
                             <div class="col-span-3 sm:col-span-1 flex flex-col px-1 ">
@@ -65,14 +65,14 @@
                                     <mat-label>{{'Mobile' | translate}}
                                         <span class="required-field">*</span>
                                     </mat-label>
-                                    <input minlength="8" maxlength="8" matInput formControlName="contact_no">
-                                    <mat-error *ngIf="form.get('contact_no').hasError('required')">
+                                    <input minlength="8" maxlength="8" matInput formControlName="contact_number">
+                                    <mat-error *ngIf="form.get('contact_number').hasError('required')">
                                         {{'Mobile number is required' | translate}}
                                     </mat-error>
-                                    <mat-error *ngIf="form.get('contact_no').hasError('minlength')">
+                                    <mat-error *ngIf="form.get('contact_number').hasError('minlength')">
                                         {{'Mobile number should be 8 digit' | translate}}
                                     </mat-error>
-                                    <mat-error *ngIf="form.get('contact_no').hasError('pattern')">
+                                    <mat-error *ngIf="form.get('contact_number').hasError('pattern')">
                                         {{'Mobile number is not valid ' | translate}}
                                     </mat-error>
                                 </mat-form-field>
@@ -84,10 +84,19 @@
                                         <mat-label>{{'Role' | translate}}
                                             <span class="required-field">*</span>
                                         </mat-label>
-                                        <mat-select formControlName="role_id">
+                                        <mat-select formControlName="Role">
+                                            <mat-option [value]="1">
+                                                role1
+                                            </mat-option>
+                                            <mat-option [value]="2">
+                                                role2
+                                            </mat-option>
+                                            <mat-option [value]="3">
+                                                role3
+                                            </mat-option>
                                             <mat-option *ngFor="let role of roles" [value]="role?.id">{{translationService.getTranslatedName(role)}}</mat-option>
                                         </mat-select>
-                                        <mat-error *ngIf="form.get('role_id').hasError('required')">
+                                        <mat-error *ngIf="form.get('Role').hasError('required')">
                                             {{'Role is required' | translate}}
                                         </mat-error>
                                     </mat-form-field>
