@@ -14,8 +14,6 @@ import { debounceTime } from 'rxjs/operators';
 import { AuthUSerService } from 'app/services/authUserService';
 import { RolesService } from 'app/services/roles/roles.service';
 import { Pagination } from 'app/pagination';
-import { ContractStatus, ContractStatuses } from 'app/contractStatus';
-import { ContractService } from 'app/services';
 export enum TabStatus {
     import = 1,
     export = 2,
@@ -35,20 +33,18 @@ export class ManageStaffComponent implements OnInit {
     staffsCount: number = 0;
     staffsTableColumns: string[] = [
         'slno',
-        'user_name',
+        'staff_firstname',
+        'staff_lastname',
         'email',
-        'contact_no',
-        'role',
+        'contact_number',
+        'Role',
         'action',
     ];
     form: FormGroup;
 
-    contractEnum = new ContractStatuses();
-    contractStatus = ContractStatus;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchKey: string;
-    customerID: any = '';
-    merchantID: any = '';
+    staffID: any = '';
     type: '';
     isBank = false;
     activeStatus: number = TabStatus.import;
@@ -57,13 +53,17 @@ export class ManageStaffComponent implements OnInit {
         public translationService: TranslationService,
         public utilitiesService: UtilitiesService,
         private dialog: MatDialog,
-        private contractService: ContractService,
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         public authUSerService: AuthUSerService,
         private translateService: TranslateService,
         private manageStaffService: ManageStaffService
     ) {
+    this.activatedRoute.queryParams.subscribe((data) => {
+        if(data.staffs){
+            this.staffID = data.staffs;
+        }
+    })
         // this.activatedRoute.queryParams.subscribe((data) => {
         //     if (data.customer) {
         //         this.tabStatus = tabStatus.All;
@@ -80,7 +80,7 @@ export class ManageStaffComponent implements OnInit {
 
     toggleStatus(value) {
         this.activeStatus = value;
-        // this.getContracts();
+        this.getStaffs();
     }
 
     getDisplayedColumns() {
@@ -88,26 +88,20 @@ export class ManageStaffComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-        this.isBank = await this.utilitiesService.isBank();
+            this.form.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
+            this.page = new Pagination().page
+            this.getStaffs();
+        });
         this.form = this.fb.group({
-            name: [''],
+            staff_firstname: [''],
+            staff_lastname:[''],
+            email:[''],
             reference: [''],
-            contract_status: [''],
-            contact_no: [''],
+            contact_number: [''],
+            Role:['']
         });
         this.setBreadcrumbs();
-        if (this.type) {
-            if (this.type == 0) {
-                this.form.controls.contract_status.setValue('');
-            } else {
-                this.form.controls.contract_status.setValue(+this.type);
-            }
-        }
-        // await this.getContracts();
-        // this.form.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
-        //     this.page = new Pagination().page
-        //     this.getContracts();
-        // });
+        await this.getStaffs();
     }
 
     async getStaffs(
@@ -117,12 +111,14 @@ export class ManageStaffComponent implements OnInit {
     ): Promise<void>{
         try{
             this.utilitiesService.startLoader();
-            const staffs = await this.manageStaffService
+            let staffs = await this.manageStaffService
                 .getStaffs(limit, offset, this.searchKey, form)
                 .toPromise();
                 if(staffs){
                     this.page.length = staffs.count;
                     this.staffsList = staffs.results;
+                    this.utilitiesService.stopLoader();
+                }else{
                     this.utilitiesService.stopLoader();
                 }
         }catch{
@@ -131,65 +127,21 @@ export class ManageStaffComponent implements OnInit {
         }
     }
 
-    // async getContracts(
-    //     limit = this.page.pageSize,
-    //     offset = this.page.offset,
-    //     form = this.form.controls
-    // ) {
-    //     try {
-    //         this.utilitiesService.startLoader();
-    //         let tabStatus = false;
-    //         let isAddShow = false;
-    //         if (this.tabStatus == tabStatus.Paid) {
-    //             isAddShow = true;
-    //             tabStatus = true;
-    //         } else if (this.tabStatus == tabStatus.Unpaid) {
-    //             isAddShow = true;
-    //             tabStatus = false;
-    //         } else {
-    //             isAddShow = false;
-    //         }
-    //         let contracts = await this.contractService
-    //             .getContracts(
-    //                 limit,
-    //                 offset,
-    //                 this.searchKey,
-    //                 form,
-    //                 this.customerID,
-    //                 this.merchantID,
-    //                 !this.isBank ? isAddShow : false,
-    //                 '',
-    //                 tabStatus
-    //             )
-    //             .toPromise();
-    //         if (contracts) {
-    //             this.page.length = contracts.count;
-    //             this.contracts = contracts.results;
-    //             this.utilitiesService.stopLoader();
-    //         } else {
-    //             this.utilitiesService.stopLoader();
-    //         }
-    //     } catch {
-    //         this.utilitiesService.stopLoader();
-    //     } finally {
-    //     }
-    // }
-
-    handlePageEvent(event) {
+    async handlePageEvent(event): Promise<void> {
         this.page.length = event.length;
         this.page.pageSize = event.pageSize;
         this.page.pageIndex = event.pageIndex;
         this.page.offset = this.page.pageIndex * this.page.pageSize;
         this.getStaffs();
-        // this.getContracts();
+
     }
-    // `${AppRoutes.Contract}`,
+
     setBreadcrumbs() {
         this.breadcrumbs = [
             {
                 absolute: true,
                 disabled: true,
-                path: AppRoutes.ManageStaff,
+                path: `{AppRoutes.ManageStaff}`,
                 relative: false,
                 name_en: 'Manage Staff',
                 name_ar: 'اتفافية',
@@ -208,10 +160,10 @@ export class ManageStaffComponent implements OnInit {
     }
 
     edit(id) {
-        // this.route.navigate([`${AppRoutes.Contract}/edit/${id}`]);
+         this.route.navigate([`${AppRoutes.ManageStaff}/edit/${id}`]);
     }
     view(id) {
-        // this.route.navigate([`${AppRoutes.Contract}/view/${id}`]);
+         this.route.navigate([`${AppRoutes.ManageStaff}/view/${id}`]);
     }
     add() {
         this.route.navigate([`${AppRoutes.ManageStaff}/create/`]);

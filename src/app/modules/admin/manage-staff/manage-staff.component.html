@@ -40,27 +40,45 @@
                                     </div>
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let contract">
-                                {{contract?.reference}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
+                                {{staffs?.reference}}
                             </td>
                         </ng-container>
                         <!-- Name -->
-                        <ng-container matColumnDef="user_name">
+                        <ng-container matColumnDef="staff_firstname">
                             <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
                                 *matHeaderCellDef disableClear>
                                 <div class="flex flex-col flex-auto">
                                     <div>
-                                        {{'User Name' | translate}}
+                                        {{'First Name' | translate}}
                                     </div>
-                                    <!-- <div>
-                                        <mat-form-field class="flex-auto gt-xs:pr-3">
-                                            <input matInput formControlName="name">
+<!--                                    <div>
+                                        <mat-form-field class="flex-auto" gt-xs:pr-3>
+                                            <input matInput formControlName="staff_firstname">
                                         </mat-form-field>
-                                    </div> -->
+                                    </div>-->
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let contract">
-                                {{contract?.customer?.name}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
+                                {{staffs?.staff_firstname}}
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="staff_lastname">
+                            <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
+                                *matHeaderCellDef disableClear>
+                                <div class="flex flex-col flex-auto">
+                                    <div>
+                                        {{'Last Name' | translate}}
+                                    </div>
+                                    <div>
+<!--                                        <mat-form-field class="flex-auto" gt-xs:pr-3>
+                                            <input matInput formControlName="staff_lastname">
+                                        </mat-form-field>-->
+                                    </div>
+                                </div>
+                            </th>
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
+                                {{staffs?.staff_lastname}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="email">
@@ -70,60 +88,63 @@
                                     <div>
                                         {{'Email' | translate}}
                                     </div>
-                                    <!-- <div>
-                                        <mat-form-field class="flex-auto gt-xs:pr-3">
-                                            <input matInput formControlName="contact_no">
-                                        </mat-form-field>
-                                    </div> -->
+<!--                                    <mat-form-field class="flex-auto gt-xs:pr-3">
+                                        <input matInput formControlName="email">
+                                    </mat-form-field>-->
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let contract">
-                                {{contract?.customer?.contact_no}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
+                                {{staffs?.email}}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="contact_no">
+                        <ng-container matColumnDef="contact_number">
                             <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
                                 *matHeaderCellDef disableClear>
                                 <div class="flex flex-col flex-auto">
                                     <div>
                                         {{'Contact No' | translate}}
                                     </div>
-                                    <!-- <div>
-                                        <mat-form-field class="flex-auto gt-xs:pr-3">
-                                            <input matInput formControlName="contact_no">
-                                        </mat-form-field>
-                                    </div> -->
+                                    <div >
+<!--                                        <mat-form-field>
+                                            <input matInput formControlName="contact_number">
+                                        </mat-form-field>-->
+                                    </div>
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let contract">
-                                {{contract?.customer?.contact_no}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
+                                {{staffs?.contact_number}}
                             </td>
                         </ng-container>
-                        <ng-container matColumnDef="contract_no">
+<!--                        <ng-container matColumnDef="contract_no">
                             <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
                                 *matHeaderCellDef disableClear>
                                 <div class="flex flex-col flex-auto">
                                     <div>
                                         {{'Contract No' | translate}}
                                     </div>
-                                    <!-- <div>
+                                    &lt;!&ndash; <div>
                                         <mat-form-field class="flex-auto gt-xs:pr-3">
                                             <input matInput formControlName="contact_no">
                                         </mat-form-field>
-                                    </div> -->
+                                    </div> &ndash;&gt;
                                 </div>
                             </th>
                             <td class="pr-8 truncate" mat-cell *matCellDef="let contract">
                                 {{contract?.customer?.contact_no}}
                             </td>
-                        </ng-container>
-                        <ng-container matColumnDef="role">
+                        </ng-container>-->
+                        <ng-container matColumnDef="Role">
                             <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
                                 *matHeaderCellDef disableClear>
+                                <div>
                                 {{'Role' | translate}}
+                                </div>
+<!--                                <mat-form-field class="flex-auto gt-xs:pr-3">
+                                    <input matInput formControlName="Role">
+                                </mat-form-field>-->
                             </th>
-                            <td class="pr-4" mat-cell *matCellDef="let contract">
-                                {{contract?.total}}
+                            <td class="pr-4" mat-cell *matCellDef="let staffs">
+                                {{staffs?.Role}}
                             </td>
                         </ng-container>
 
@@ -134,10 +155,10 @@
                                 style="text-align: end !important;" mat-header-cell *matHeaderCellDef disableClear>
                                 {{'Actions' | translate}}
                             </th>
-                            <td class="pr-4 p-0 action-header" mat-cell *matCellDef="let contract">
+                            <td class="pr-4 p-0 action-header" mat-cell *matCellDef="let staffs">
                                 <div class="flex flex-row flex-auto overflow-hidden action-body">
                                     <div class="flex flex-row action-btn-container" fxFlex="0 0 auto">
-                                        <button (click)="view(contract?.id)"
+                                        <button (click)="view(staffs?.id)"
                                             class="action-btn px-4 flex flex-row flex-auto items-center primary-bg-color"
                                             [ngClass]="translationService.getDirection()=='ltr'? 'rounded-l-md' : 'rounded-r-md'"
                                             style="width: auto !important;" mat-icon-button fxLayoutGap="1em">
@@ -153,7 +174,7 @@
                                         </button>
                                     </div>
                                     <mat-menu [xPosition]="'before'" #userActions="matMenu">
-                                        <button (click)="edit(contract?.id)" mat-menu-item>
+                                        <button (click)="edit(staffs?.id)" mat-menu-item>
                                             <div class="flex flex-row flex-initial gap-x-2 items-center">
                                                 <mat-icon svgIcon="mat_outline:edit"></mat-icon>
                                                 <strong>{{'Edit' | translate}}</strong>
@@ -175,7 +196,7 @@
                             <td class="mat-cell border-b-0">{{'No data found' | translate}}</td>
                         </tr>
                         <tr class="h-18 hover:bg-hover" mat-row
-                            *matRowDef="let product; columns: getDisplayedColumns();">
+                            *matRowDef="let staffs; columns: getDisplayedColumns();">
                         </tr>
                     </table>
                 </div>
@@ -186,7 +207,7 @@
                     [showFirstLastButtons]="true" [pageSizeOptions]="page?.pageSizeOptions"
                     [pageIndex]="page?.pageIndex">
                 </mat-paginator>
-                <ng-template #noProducts>
+                <ng-template #noStaffs>
                     <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
                         {{'Nothing to Display' | translate}}</div>
                 </ng-template>

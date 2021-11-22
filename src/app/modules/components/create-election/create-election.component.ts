@@ -113,7 +113,7 @@ export class CreateElectionComponent implements OnInit {
     filesBack: any = [];
     form: FormGroup;
     async ngOnInit(): Promise<void> {
-        /* this.utilitiesService.startLoader(); */
+        this.utilitiesService.startLoader();
         this.setBreadcrumbs();
         await this.formInit();
 

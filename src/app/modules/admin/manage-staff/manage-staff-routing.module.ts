@@ -16,14 +16,14 @@ const routes: Routes = [
         component: CreateStaffComponent,
         pathMatch: 'full',
     },
-    // {
-    //     path: 'edit/:id',
-    //     component: CreateCustomerComponent,
-    // },
-    // {
-    //     path: 'view/:id',
-    //     component: ViewCustomerComponent,
-    // },
+     {
+         path: 'edit/:id',
+         component: CreateStaffComponent,
+     },
+     {
+         path: 'view/:id',
+         component: CreateStaffComponent,
+     },
 ];
 
 @NgModule({
