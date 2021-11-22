@@ -30,7 +30,7 @@ import { ValidateInputs } from 'app/inputValidation';
 export class CreateElectionComponent implements OnInit {
     @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
     @ViewChild('UploadFileInput') uploadFileInput: ElementRef;
-    myfilename = 'select File';
+    myfilename = 'Select File';
     protected _onDestroy = new Subject<void>();
     id: any = '';
     breadcrumbs = [];
@@ -280,7 +280,7 @@ export class CreateElectionComponent implements OnInit {
                             'Election created successfully'
                         );
                         this.utilitiesService.showSuccessToast(successmsg);
-                        this.route.navigate([AppRoutes.ManageElections])
+                        this.route.navigate([AppRoutes.ManageElections]);
                     }
                 }catch{
 

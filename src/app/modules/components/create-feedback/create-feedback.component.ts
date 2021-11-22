@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import {
     FormBuilder,
     FormControl,
@@ -29,22 +29,16 @@ export class CreateFeedbackComponent implements OnInit {
   @ViewChild('singleSelect', { static: true }) singleSelect: MatSelect;
   @ViewChild(DocumentsComponent)
   documentsComponent: DocumentsComponent;
+  @ViewChild('UploadFileInput') uploadFileInput: ElementRef;
   public countryControl: FormControl = new FormControl();
   protected _onDestroy = new Subject<void>();
   public filteredCountry: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   id: any = '';
+  myfilename = 'Select File';
   breadcrumbs = [];
-  businessCategory = [];
   bankNames = [];
   feedbackDetails: any;
-  countryList = [];
   afterViewInit = false;
-  isLoadingEmail: boolean = false;
-  isLoadingContact: boolean = false;
-  isLoadingIban: boolean = false;
-  emailError: boolean;
-  contactError: boolean;
-  ibanNoError: boolean;
   defaultValue: any;
 
   today = new Date();
@@ -68,6 +62,29 @@ export class CreateFeedbackComponent implements OnInit {
           this.id = data['id'];
       });
   }
+  fileChangeEvent(fileInput: any){
+    if(fileInput.target.files && fileInput.target.files[0]){
+        this.myfilename= '';
+        Array.from(fileInput.target.files).forEach((file: File) => {
+            console.log(file);
+            this.myfilename += file.name + ',';
+        });
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+            const image = new Image();
+            image.src = e.target.result;
+            image.onload = rs => {
+                const convertImageToBase64 = e.target.result;
+            }
+        }
+        reader.readAsDataURL(fileInput.target.files[0]);
+        this.uploadFileInput.nativeElement.value = "";
+    }
+    else{
+        this.myfilename = 'Select File';
+    }
+  }
+
 
   filesFront: any = [];
   filesBack: any = [];
@@ -134,15 +151,7 @@ export class CreateFeedbackComponent implements OnInit {
       });
   }
 
-  isEmailError() {
-      return this.emailError;
-  }
-  isErrorContact() {
-      return this.contactError;
-  }
-  isIBANError() {
-      return this.ibanNoError;
-  }
+
 
   setBreadcrumbs() {
       this.breadcrumbs = [
@@ -179,153 +188,92 @@ export class CreateFeedbackComponent implements OnInit {
       this.form.controls.logo.setValue(null);
   }
 
-  save() {
-      debugger;
-      if (this.form.valid && !this.contactError && !this.emailError) {
-          let lengthOfDocuments = 0;
-          let form = this.form.value;
-          let country_id = form.country_id.id
-              ? form.country_id.id
-              : form.country_id;
-          form.country_id = country_id;
-          let documents = this.documentsComponent.form.value;
-          if (
-              documents &&
-              documents.documents &&
-              documents.documents.length
-          ) {
-              lengthOfDocuments = documents.documents.length;
-              form.documents = documents.documents;
-              form.documents.forEach((data, index) => {
-                  if (!data.id) {
-                      delete data.id;
-                  }
-              });
-              let formDocuments = [
-                  ...form.documents.filter((data) => data.document),
-              ];
-              form.documents = [...formDocuments];
-          } else {
-              form.documents = [];
-              let error = this.translateService.instant(
-                  'Documents are mandatory'
-              );
-              this.utilitiesService.showErrorToast(error);
-          }
-          if (lengthOfDocuments != form.documents.length) {
-              let error = this.translateService.instant(
-                  'Documents are mandatory'
-              );
-              this.utilitiesService.showErrorToast(error);
-          } else {
-              if (!this.id) {
-                  try {
-                      let content = this.translateService.instant(
-                          'Are you sure, Do you want to save ?'
-                      );
-                      let heading = this.translateService.instant('Save');
-                      let fromApp = false;
-                      let size = this.utilitiesService.isMobileAlertModal();
-                      const dialogRef = this.dialog.open(
-                          AlertModalComponent,
-                          {
-                              data: { content, heading, fromApp },
-                              maxWidth: '',
-                              width: `${size.width}`,
-                              height: `${size.height}`,
-                          }
-                      );
-                      dialogRef.afterClosed().subscribe(async (resp) => {
-                            if (resp){
-                                let add = await this.manageFeedbackService
-                                    .addFeedback(form)
-                                    .toPromise();
-                                    if (add) {
-                                        let successmsg = this.translateService.instant(
-                                            'Feedback Created Successfully'
-                                        );
-                                        this.utilitiesService.showSuccessToast(successmsg);
-                                        this.route.navigate([AppRoutes.ManageInternalFeedback]);
-                                    }
-                            }
-                          // if (resp) {
-                          //     let add = await this.outletsService
-                          //         .addMerchants(form)
-                          //         .toPromise();
-                          //     if (add) {
-                          //         let successmsg =
-                          //             this.translateService.instant(
-                          //                 'Merchant created successfully'
-                          //             );
-                          //         this.utilitiesService.showSuccessToast(
-                          //             successmsg
-                          //         );
-                          //         this.route.navigate([AppRoutes.Merchants]);
-                          //     }
-                          // }
-                      });
-                  } catch {
-                  } finally {
-                      // this.utilitiesService.stopLoader();
-                  }
-              } else {
-                  try {
-                      let content = this.translateService.instant(
-                          'Are you sure, Do you want to update ?'
-                      );
-                      let heading = this.translateService.instant('Update');
-                      let fromApp = false;
-                      let size = this.utilitiesService.isMobileAlertModal();
-                      const dialogRef = this.dialog.open(
-                          AlertModalComponent,
-                          {
-                              data: { content, heading, fromApp },
-                              maxWidth: '',
-                              width: `${size.width}`,
-                              height: `${size.height}`,
-                          }
-                      );
-                      dialogRef.afterClosed().subscribe(async (resp) => {
-                        if (resp){
-                            let add = await this.manageFeedbackService
-                                .updateFeedback(form, this.id)
-                                .toPromise();
-                                if (add){
-                                    let successmsg = this.translateService.instant(
-                                        'Feedback updated Successfully'
-                                    );
-                                    this.utilitiesService.showSuccessToast(successmsg);
-                                    this.route.navigate([AppRoutes.ManageInternalFeedback]);
-                                }
-                        }
-                          // if (resp) {
-                          //     let add = await this.outletsService
-                          //         .updateMerchants(form, this.id)
-                          //         .toPromise();
-                          //     if (add) {
-                          //         let successmsg =
-                          //             this.translateService.instant(
-                          //                 'Merchant updated successfully'
-                          //             );
-                          //         this.utilitiesService.showSuccessToast(
-                          //             successmsg
-                          //         );
-                          //         // this.route.navigate([AppRoutes.Merchants]);
-                          //     }
-                          // }
-                      });
-                  } catch {
-                  } finally {
-                      this.utilitiesService.stopLoader();
-                  }
-              }
-          }
-      } else {
-          for (const key of Object.keys(this.form.controls)) {
-              this.form.controls[key].markAllAsTouched();
-          }
-      }
+
+
+  save(){
+    if(this.form.valid){
+        if(this.id){
+            this.updateFeedback();
+        }else{
+            this.addFeedback();
+        }
+    }else{
+        for(const key of Object.keys(this.form.controls)){
+            this.form.controls[key].markAllAsTouched();
+        }
+    }
   }
+  updateFeedback(){
+    let content = this.translateService.instant(
+        'Are you sure, Do you want to update?'
+    );
+    let heading = this.translateService.instant('update');
+    let fromApp = false;
+    let size = this.utilitiesService.isMobileAlertModal();
+    const dialogRef = this.dialog.open(AlertModalComponent, {
+        data: { content, heading, fromApp },
+        maxWidth: '',
+        width: `${size.width}`,
+        height: `${size.height}`
+    });
+    dialogRef.afterClosed().subscribe(async(resp) => {
+        if(resp){
+            let form = this.form.value;
+            try{
+                this.utilitiesService.startLoader();
+                    const addFeedback = this.manageFeedbackService
+                        .updateFeedback(form, this.id)
+                        .toPromise();
+                    if(addFeedback){
+                        let successmsg = this.translateService.instant(
+                            'Feedback Updated Successfully'
+                        );
+                        this.utilitiesService.showSuccessToast(successmsg);
+                    }
+            }catch{
+            }finally{
+            }
+
+        }
+    });
+  }
+  async addFeedback(){
+    let content = this.translateService.instant(
+        'Are you sure, Do you want to save?'
+    );
+    let heading = this.translateService.instant('save');
+    let fromApp = false;
+    let size = this.utilitiesService.isMobileAlertModal();
+    const dialogRef = this.dialog.open(AlertModalComponent, {
+        data: { content, heading, fromApp },
+        maxWidth: '',
+        width: `${size.width}`,
+        height: `${size.height}`
+    });
+    dialogRef.afterClosed().subscribe(async(resp)=> {
+        if(resp){
+            let form = this.form.value;
+            try{
+                this.utilitiesService.startLoader();
+                const addFeedback = await this.manageFeedbackService
+                    .addFeedback(form)
+                    .toPromise();
+                if(addFeedback){
+                    let successmsg = this.translateService.instant(
+                        'Feedback created successfully'
+                    );
+                    this.utilitiesService.showSuccessToast(successmsg);
+                    this.route.navigate([AppRoutes.ManageInternalFeedback]);
+                }
+            }catch{
+
+            }finally{
+            }
+        }
+    });
+  }
+
+
   getDocument() {
       let documents = [];
       try {

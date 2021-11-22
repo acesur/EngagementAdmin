@@ -16,6 +16,7 @@ import { ReplaySubject, Subject } from 'rxjs';
 import { DocumentsComponent } from '../documents/documents.component';
 import { AlertModalComponent } from '../alert-modal/alert-modal.component';
 import { FuseAnimations } from '@fuse/animations';
+import { ManageInitiativeService } from 'app/services/manage-citizen-led-initiatives/manage-initiative.service';
 
 @Component({
   selector: 'app-create-citizen',
@@ -32,20 +33,12 @@ export class CreateCitizenComponent implements OnInit {
   protected _onDestroy = new Subject<void>();
   public filteredCountry: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
   @ViewChild('UploadFileInput') uploadFileInput: ElementRef;
-  myfilename = 'select File';
+  myfilename = 'Select File';
   id: any = '';
   breadcrumbs = [];
-  businessCategory = [];
   bankNames = [];
   citizenDetails: any;
-  countryList = [];
   afterViewInit = false;
-  isLoadingEmail: boolean = false;
-  isLoadingContact: boolean = false;
-  isLoadingIban: boolean = false;
-  emailError: boolean;
-  contactError: boolean;
-  ibanNoError: boolean;
   defaultValue: any;
 
   today = new Date();
@@ -58,7 +51,9 @@ export class CreateCitizenComponent implements OnInit {
       public translationService: TranslationService,
       private _location: Location,
       private translateService: TranslateService,
-      private dialog: MatDialog // private outletsService: OutletsService, // private customerService: CustomerService, // private validateInputs: ValidateInputs,
+      private dialog: MatDialog,
+      private manageInitiativeService: ManageInitiativeService
+       // private outletsService: OutletsService, // private customerService: CustomerService, // private validateInputs: ValidateInputs,
   ) // private additionalService: AdditionalService,
   // private settingsService: SettingsService
   {
@@ -155,15 +150,6 @@ export class CreateCitizenComponent implements OnInit {
       });
   }
 
-  isEmailError() {
-      return this.emailError;
-  }
-  isErrorContact() {
-      return this.contactError;
-  }
-  isIBANError() {
-      return this.ibanNoError;
-  }
 
   setBreadcrumbs() {
       this.breadcrumbs = [
@@ -200,129 +186,92 @@ export class CreateCitizenComponent implements OnInit {
       this.form.controls.logo.setValue(null);
   }
 
-  save() {
-      debugger;
-      if (this.form.valid && !this.contactError && !this.emailError) {
-          let lengthOfDocuments = 0;
-          let form = this.form.value;
-          let country_id = form.country_id.id
-              ? form.country_id.id
-              : form.country_id;
-          form.country_id = country_id;
-          let documents = this.documentsComponent.form.value;
-          if (
-              documents &&
-              documents.documents &&
-              documents.documents.length
-          ) {
-              lengthOfDocuments = documents.documents.length;
-              form.documents = documents.documents;
-              form.documents.forEach((data, index) => {
-                  if (!data.id) {
-                      delete data.id;
-                  }
-              });
-              let formDocuments = [
-                  ...form.documents.filter((data) => data.document),
-              ];
-              form.documents = [...formDocuments];
-          } else {
-              form.documents = [];
-              let error = this.translateService.instant(
-                  'Documents are mandatory'
-              );
-              this.utilitiesService.showErrorToast(error);
-          }
-          if (lengthOfDocuments != form.documents.length) {
-              let error = this.translateService.instant(
-                  'Documents are mandatory'
-              );
-              this.utilitiesService.showErrorToast(error);
-          } else {
-              if (!this.id) {
-                  try {
-                      let content = this.translateService.instant(
-                          'Are you sure, Do you want to save ?'
-                      );
-                      let heading = this.translateService.instant('Save');
-                      let fromApp = false;
-                      let size = this.utilitiesService.isMobileAlertModal();
-                      const dialogRef = this.dialog.open(
-                          AlertModalComponent,
-                          {
-                              data: { content, heading, fromApp },
-                              maxWidth: '',
-                              width: `${size.width}`,
-                              height: `${size.height}`,
-                          }
-                      );
-                      dialogRef.afterClosed().subscribe(async (resp) => {
-                          // if (resp) {
-                          //     let add = await this.outletsService
-                          //         .addMerchants(form)
-                          //         .toPromise();
-                          //     if (add) {
-                          //         let successmsg =
-                          //             this.translateService.instant(
-                          //                 'Merchant created successfully'
-                          //             );
-                          //         this.utilitiesService.showSuccessToast(
-                          //             successmsg
-                          //         );
-                          //         this.route.navigate([AppRoutes.Merchants]);
-                          //     }
-                          // }
-                      });
-                  } catch {
-                  } finally {
-                      // this.utilitiesService.stopLoader();
-                  }
-              } else {
-                  try {
-                      let content = this.translateService.instant(
-                          'Are you sure, Do you want to update ?'
-                      );
-                      let heading = this.translateService.instant('Update');
-                      let fromApp = false;
-                      let size = this.utilitiesService.isMobileAlertModal();
-                      const dialogRef = this.dialog.open(
-                          AlertModalComponent,
-                          {
-                              data: { content, heading, fromApp },
-                              maxWidth: '',
-                              width: `${size.width}`,
-                              height: `${size.height}`,
-                          }
-                      );
-                      dialogRef.afterClosed().subscribe(async (resp) => {
-                          // if (resp) {
-                          //     let add = await this.outletsService
-                          //         .updateMerchants(form, this.id)
-                          //         .toPromise();
-                          //     if (add) {
-                          //         let successmsg =
-                          //             this.translateService.instant(
-                          //                 'Merchant updated successfully'
-                          //             );
-                          //         this.utilitiesService.showSuccessToast(
-                          //             successmsg
-                          //         );
-                          //         // this.route.navigate([AppRoutes.Merchants]);
-                          //     }
-                          // }
-                      });
-                  } catch {
-                  } finally {
-                      this.utilitiesService.stopLoader();
-                  }
-              }
-          }
-      } else {
-          for (const key of Object.keys(this.form.controls)) {
-              this.form.controls[key].markAllAsTouched();
-          }
-      }
+  save(){
+    if(this.form.valid){
+        if(this.id){
+            this.updateInitiative();
+        }else{
+            this.addInitiative();
+        }
+    }else{
+        for(const key of Object.keys(this.form.controls)){
+            this.form.controls[key].markAllAsTouched();
+        }
+    }
   }
+
+  updateInitiative(){
+    let content = this.translateService.instant(
+        'Are you sure, Do you want to update?'
+    );
+    let heading = this.translateService.instant('update');
+    let fromApp = false;
+    let size = this.utilitiesService.isMobileAlertModal();
+    const dialogRef = this.dialog.open(AlertModalComponent,{
+        data: { content, heading, fromApp },
+        maxWidth: '',
+        width: `${size.width}`,
+        height: `${size.height}`
+    });
+    dialogRef.afterClosed().subscribe(async(resp) => {
+        if(resp){
+            let form = this.form.value;
+            try{
+                this.utilitiesService.startLoader();
+                    const addInitiative = this.manageInitiativeService
+                        .updateInitiative(form, this.id)
+                        .toPromise();
+                    if(addInitiative){
+                        let successmsg = this.translateService.instant(
+                            'Citizen Initiative Updated Successfully'
+                        );
+                        this.utilitiesService.showSuccessToast(successmsg);
+                    }
+            }catch{
+            }finally{
+
+            }
+
+        }
+    });
+  }
+  async addInitiative(){
+    let content = this.translateService.instant(
+        'Are you sure, Do you want to save?'
+    );
+    let heading = this.translateService.instant('save');
+    let fromApp = false;
+    let size = this.utilitiesService.isMobileAlertModal();
+    const dialogRef = this.dialog.open(AlertModalComponent, {
+        data: { content, heading, fromApp },
+        maxWidth: '',
+        width: `${size.width}`,
+        height: `${size.height}`
+    });
+    dialogRef.afterClosed().subscribe(async(resp) => {
+        if(resp){
+            let form = this.form.value;
+            try{
+                this.utilitiesService.startLoader();
+                const addInitiative = await this.manageInitiativeService
+                    .addInitiative(form)
+                    .toPromise();
+                if(addInitiative){
+                    let successmsg = this.translateService.instant(
+                        'Citizen Initiative created Successfully'
+                    );
+                    this.utilitiesService.showSuccessToast(successmsg);
+                    this.route.navigate([AppRoutes.ManageCitizenLedInitiatives]);
+                }
+            }catch{
+
+            }finally{
+            }
+        }
+    });
+  }
+
+
   getDocument() {
       let documents = [];
       try {

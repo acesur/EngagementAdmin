@@ -127,6 +127,16 @@
                                         </mat-select>
                                     </mat-form-field>
                                 </div>
+                                <div class="col-span-3 sm:col-span-1 flex flex-col px-1">
+                                    <mat-form-field class="example-full-width">
+                                        <mat-label>
+                                            {{'Upload File' | translate}}
+                                        </mat-label>
+                                            <input matInput [(ngModel)]="myfilename" readonly name="electionImage"/>
+                                        <input formControlName="upload_image" type="file" id="fileUpload" (change)="fileChangeEvent($event)"
+                                               #UploadFileInput multiple="multiple" accept="image/*"/>
+                                    </mat-form-field>
+                                </div>
                                 <div class="col-span-4 sm:col-span-3 flex flex-col px-1">
                                     <mat-form-field class="example-full-width">
                                         <mat-label>{{'Description' | translate}}
