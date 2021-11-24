@@ -43,4 +43,27 @@ export class ManageFeedbackService{
             undefined
         );
     }
+
+    convertFormToFormData(form){
+        let formData = new FormData();
+        for (let key of Object.keys(form)){
+           /*  let ( key == 'documents' ) {
+                const documents = form[key];
+                delete form.documents;
+                documents.forEach((file) =>{
+                    if(file.file){
+                        formData.append(
+                            'document_types',
+                            file.document_type_id
+                        );
+                        formData.append('documents', file.file);
+                    }
+                });
+            }else */ if (typeof form[key] == 'object'){
+                formData.append(key, JSON.stringify(form[key]));
+            }else{
+                formData.append(`${key}`, `${form[key] ?  form[key] : ''} `);
+            }
+        }return formData;
+    }
 }

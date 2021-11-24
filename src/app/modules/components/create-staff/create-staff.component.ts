@@ -202,6 +202,7 @@ export class CreateStaffComponent implements OnInit {
                             'Staff Updated Successfully'
                         );
                         this.utilitiesService.showSuccessToast(successmsg);
+                        this.route.navigate([AppRoutes.ManageStaff]);
                     }
                   // const addUser = await this.userService
                   //     .updateUser(form, this.id)
@@ -215,6 +216,7 @@ export class CreateStaffComponent implements OnInit {
                   // }
               } catch {
               } finally {
+                this.utilitiesService.stopLoader();
               }
           }
       });
@@ -250,6 +252,7 @@ export class CreateStaffComponent implements OnInit {
                 }
               } catch {
               } finally {
+                this.utilitiesService.stopLoader();
               }
           }
       });

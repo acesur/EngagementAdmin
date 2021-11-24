@@ -3,18 +3,22 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FuseAnimations } from '@fuse/animations';
-import { AppRoutes } from 'app/AppRoutes';
+import { AppRoutes} from 'app/AppRoutes';
 import { ContractStatus, ContractStatuses } from 'app/contractStatus';
 import { DownloadTypes } from 'app/downloadTypes';
 import { DownloadListComponent } from 'app/modules/components/download-list/download-list.component';
 import { TabStatus } from 'app/modules/constantsEnum';
 import { Pagination } from 'app/pagination';
-import { TranslationService } from 'app/services';
+import { FilterTypes } from 'app/FilterTypes'
+import { TranslationService} from 'app/services';
 import { AuthUSerService } from 'app/services/authUserService';
 import { ContractService } from 'app/services/contract/contract.service';
 import { UtilitiesService } from 'app/services/utilitiesService';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
+import { ManageElectionService } from 'app/services/manage-election/manage-election.service'
+
+
 
 @Component({
     selector: 'app-manage-elections',
@@ -23,169 +27,114 @@ import { debounceTime } from 'rxjs/operators';
     animations: FuseAnimations,
 })
 export class ManageElectionsComponent implements OnInit {
-    contracts = [];
+    filterType = FilterTypes;
+    PaidStatus = TabStatus;
+    tabStatus: number = TabStatus.All;
+    electionsList = [];
     breadcrumbs = [];
     page = new Pagination().page;
-    PaidStatus = TabStatus;
-    productsCount: number = 0;
-    productsTableColumns: string[] = [
-        'slno',
-        'election',
-        'election_date',
-        'engagements',
-        'created_by',
+    electionsCount: number = 0;
+    electionsTableColumns: string[] = [
+        'election_name',
+        'start_date',
+        'participants',
         'action',
     ];
     form: FormGroup;
-
-    contractEnum = new ContractStatuses();
-    contractStatus = ContractStatus;
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchKey: string;
-    customerID: any = '';
-    merchantID: any = '';
-    type: '';
-    isBank = false;
-    tabStatus: number = TabStatus.All;
     constructor(
         private route: Router,
         public translationService: TranslationService,
         public utilitiesService: UtilitiesService,
         private dialog: MatDialog,
-        private contractService: ContractService,
+        private manageElectionService: ManageElectionService,
         private activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        public authUSerService: AuthUSerService,
-    ) {
-        // this.activatedRoute.queryParams.subscribe((data) => {
-        //     if (data.customer) {
-        //         this.tabStatus = PaidStatus.All;
-        //         this.customerID = data.customer;
-        //     } else if (data.merchant) {
-        //         this.tabStatus = PaidStatus.All;
-        //         this.merchantID = data.merchant;
-        //     } else if (data.type) {
-        //         this.tabStatus = PaidStatus.All;
-        //         this.type = data.type;
-        //     }
-        // });
-    }
 
-    toggleStatus(value) {
+/*         public authUSerService: AuthUSerService, */
+    ) {
+        this.setBreadcrumbs();
+        this.form = this.fb.group({
+            election_name: null,
+            start_date: null,
+            participants: null
+
+        });
+        this.getElections();
+    }
+        toggleStatus(value) {
         this.tabStatus = value;
         // this.getContracts();
     }
+    ngOnInit(): void{
+        this.form.valueChanges.pipe(debounceTime(400)).subscribe((data) => {
+            this.page = new Pagination().page;
+            this.getElections();
+        });
+    }
 
     getDisplayedColumns() {
-        return this.productsTableColumns;
+        return this.electionsTableColumns;
     }
 
-    async ngOnInit(): Promise<void> {
-        this.isBank = await this.utilitiesService.isBank();
-        this.form = this.fb.group({
-            name: [''],
-            reference: [''],
-            contract_status: [''],
-            contact_no: [''],
-        });
-        this.setBreadcrumbs();
-        if (this.type) {
-            if (this.type == 0) {
-                this.form.controls.contract_status.setValue('');
-            } else {
-                this.form.controls.contract_status.setValue(+this.type);
-            }
+    async getElections(
+        limit = this.page.pageSize,
+        offset = this.page.offset,
+        form = this.form.controls
+    ): Promise<void>{
+        try{
+            this.utilitiesService.startLoader();
+            const elections = await this.manageElectionService
+                .getElectionsList(
+                    Object.assign({
+                        limit: this.page.pageSize, offset: this.page.offset
+                    },
+                        this.form.value
+                    )
+                )
+                .toPromise();
+        if (elections){
+            this.page.length = elections.count;
+            this.electionsList = elections.results;
+            this.utilitiesService.stopLoader();
         }
-        // await this.getContracts();
-        // this.form.valueChanges.pipe(debounceTime(500)).subscribe((data) => {
-        //     this.page = new Pagination().page
-        //     this.getContracts();
-        // });
+    }catch{
+        this.utilitiesService.stopLoader();
+    }finally {
     }
-
-    // async getContracts(
-    //     limit = this.page.pageSize,
-    //     offset = this.page.offset,
-    //     form = this.form.controls
-    // ) {
-    //     try {
-    //         this.utilitiesService.startLoader();
-    //         let tabStatus = false;
-    //         let isAddShow = false;
-    //         if (this.tabStatus == PaidStatus.Paid) {
-    //             isAddShow = true;
-    //             tabStatus = true;
-    //         } else if (this.tabStatus == PaidStatus.Unpaid) {
-    //             isAddShow = true;
-    //             tabStatus = false;
-    //         } else {
-    //             isAddShow = false;
-    //         }
-    //         let contracts = await this.contractService
-    //             .getContracts(
-    //                 limit,
-    //                 offset,
-    //                 this.searchKey,
-    //                 form,
-    //                 this.customerID,
-    //                 this.merchantID,
-    //                 !this.isBank ? isAddShow : false,
-    //                 '',
-    //                 tabStatus
-    //             )
-    //             .toPromise();
-    //         if (contracts) {
-    //             this.page.length = contracts.count;
-    //             this.contracts = contracts.results;
-    //             this.utilitiesService.stopLoader();
-    //         } else {
-    //             this.utilitiesService.stopLoader();
-    //         }
-    //     } catch {
-    //         this.utilitiesService.stopLoader();
-    //     } finally {
-    //     }
-    // }
-
-    handlePageEvent(event) {
-        this.page.length = event.length;
-        this.page.pageSize = event.pageSize;
-        this.page.pageIndex = event.pageIndex;
-        this.page.offset = this.page.pageIndex * this.page.pageSize;
-        // this.getContracts();
+}
+    trackByFn(index: number, item: any): any {
+        return item.id || index;
     }
-    // `${AppRoutes.Contract}`,
-    setBreadcrumbs() {
+    setBreadcrumbs(): void {
         this.breadcrumbs = [
             {
                 absolute: true,
                 disabled: true,
-                path: AppRoutes.ManageEngagements,
+                path: AppRoutes.ManageElections,
                 relative: false,
                 name_en: 'Manage Elections',
                 name_ar: 'اتفافية',
             },
         ];
     }
-
-    ngAfterViewInit(): void {}
-    ngOnDestroy(): void {
-        this._unsubscribeAll.next();
-        this._unsubscribeAll.complete();
-    }
-
-    trackByFn(index: number, item: any): any {
-        return item.id || index;
-    }
-
     edit(id) {
-        // this.route.navigate([`${AppRoutes.Contract}/edit/${id}`]);
+         this.route.navigate([`${AppRoutes.ManageElections}/edit/${id}`]);
     }
     view(id) {
-        // this.route.navigate([`${AppRoutes.Contract}/view/${id}`]);
+        console.log(this.form.value);
+         this.route.navigate([`${AppRoutes.ManageElections}/view/${id}`]);
     }
     add() {
         this.route.navigate([`${AppRoutes.ManageElections}/create/`]);
     }
-   
+    async handlePageEvent(event): Promise<void> {
+        this.page.length = event.length;
+        this.page.pageSize = event.pageSize;
+        this.page.pageIndex = event.pageIndex;
+        this.page.offset = this.page.pageIndex * this.page.pageSize;
+        this.getElections();
+    }
 }
+
+

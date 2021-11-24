@@ -126,6 +126,20 @@ export class CreateElectionComponent implements OnInit {
     tes() {
         alert('dw');
     }
+    async getDetails(){
+        try{
+            const electionDetails = await this.manageElectionService
+                .getElectionDetails(this.id)
+                .toPromise();
+                if(electionDetails){
+                    this.electionDetails = electionDetails;
+                    this.utilitiesService.stopLoader();
+                    this.formInit();
+                }
+        }catch{
+        }finally{
+        }
+    }
 
     /* ngAfterViewInit() {} */
 
@@ -247,6 +261,7 @@ export class CreateElectionComponent implements OnInit {
                                     'Election Updated Successfully'
                                 );
                                 this.utilitiesService.showSuccessToast(successmsg);
+                                this.route.navigate([AppRoutes.ManageElections]);
                         }
                 }catch{
                 }finally{

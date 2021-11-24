@@ -230,6 +230,7 @@ export class CreateEngagementComponent implements OnInit {
                             }
                 }catch{
                 }finally{
+                    this.utilitiesService.stopLoader();
                 }
             }
         });
@@ -265,6 +266,7 @@ export class CreateEngagementComponent implements OnInit {
                 }catch{
 
                 }finally{
+                this.utilitiesService.stopLoader();
                 }
             }
         });

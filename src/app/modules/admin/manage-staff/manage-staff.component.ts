@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FuseAnimations } from '@fuse/animations';
 import { TranslateService } from '@ngx-translate/core';
 import { AppRoutes } from 'app/AppRoutes';
+import { FilterTypes } from 'app/FilterTypes'
 import { ManageStaffService } from 'app/services/manage-staff/manage-staff.service';
 import { AlertModalComponent } from 'app/modules/components/alert-modal/alert-modal.component';
 import { TranslationService } from 'app/services/translationService';
@@ -26,13 +27,13 @@ export enum TabStatus {
 })
 export class ManageStaffComponent implements OnInit {
     staffs = [];
+    filterType = FilterTypes;
     staffsList = [];
     breadcrumbs = [];
     page = new Pagination().page;
     tabStatus = TabStatus;
     staffsCount: number = 0;
     staffsTableColumns: string[] = [
-        'slno',
         'staff_firstname',
         'staff_lastname',
         'email',
@@ -44,7 +45,6 @@ export class ManageStaffComponent implements OnInit {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     searchKey: string;
-    staffID: any = '';
     type: '';
     isBank = false;
     activeStatus: number = TabStatus.import;
@@ -59,11 +59,22 @@ export class ManageStaffComponent implements OnInit {
         private translateService: TranslateService,
         private manageStaffService: ManageStaffService
     ) {
-    this.activatedRoute.queryParams.subscribe((data) => {
+        this.setBreadcrumbs();
+        this.form = this.fb.group({
+            staff_firstname:[''],
+            staff_lastname:[''],
+            email:[''],
+            reference:[''],
+            contact_number:[''],
+            Role:['']
+        });
+        this.getStaffs();
+    }
+/*     this.activatedRoute.queryParams.subscribe((data) => {
         if(data.staffs){
             this.staffID = data.staffs;
         }
-    })
+    }) */
         // this.activatedRoute.queryParams.subscribe((data) => {
         //     if (data.customer) {
         //         this.tabStatus = tabStatus.All;
@@ -76,7 +87,7 @@ export class ManageStaffComponent implements OnInit {
         //         this.type = data.type;
         //     }
         // });
-    }
+
 
     toggleStatus(value) {
         this.activeStatus = value;
@@ -92,16 +103,6 @@ export class ManageStaffComponent implements OnInit {
             this.page = new Pagination().page
             this.getStaffs();
         });
-        this.form = this.fb.group({
-            staff_firstname: [''],
-            staff_lastname:[''],
-            email:[''],
-            reference: [''],
-            contact_number: [''],
-            Role:['']
-        });
-        this.setBreadcrumbs();
-        await this.getStaffs();
     }
 
     async getStaffs(
@@ -111,8 +112,35 @@ export class ManageStaffComponent implements OnInit {
     ): Promise<void>{
         try{
             this.utilitiesService.startLoader();
+            const staffs = await this.manageStaffService
+                .getStaffsList(
+                    Object.assign({
+                        limit: this.page.pageSize, offset: this.page.offset
+                    },
+                        this.form.value
+                    )
+                )
+                .toPromise();
+                if(staffs){
+                    this.page.length = staffs.count;
+                    this.staffsList = staffs.results;
+                    this.utilitiesService.stopLoader();
+                }
+        }catch{
+            this.utilitiesService.stopLoader();
+        }finally{
+        }
+    }
+
+   /*  async getStaffs(
+        limit = this.page.pageSize,
+        offset = this.page.offset,
+        form = this.form.controls
+    ): Promise<void>{
+        try{
+            this.utilitiesService.startLoader();
             let staffs = await this.manageStaffService
-                .getStaffs(limit, offset, this.searchKey, form)
+                .getStaffsList(limit, offset, this.searchKey, form)
                 .toPromise();
                 if(staffs){
                     this.page.length = staffs.count;
@@ -125,7 +153,7 @@ export class ManageStaffComponent implements OnInit {
             this.utilitiesService.stopLoader();
         }finally{
         }
-    }
+    } */
 
     async handlePageEvent(event): Promise<void> {
         this.page.length = event.length;

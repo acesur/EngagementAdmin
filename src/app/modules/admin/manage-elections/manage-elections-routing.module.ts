@@ -8,16 +8,16 @@ const routes: Routes = [
     {
         path: "",
         component: ManageElectionsComponent,
-        
+
     },
-    // {
-    //     path: 'view/:id',
-    //     component: CreateElectionComponent,
-    // },
-    // {
-    //     path: 'edit/:id',
-    //     component: CreateContractComponent,
-    // },
+     {
+         path: 'view/:id',
+         component: CreateElectionComponent,
+     },
+     {
+         path: 'edit/:id',
+         component: CreateElectionComponent,
+     },
     {
         path: 'create',
         component: CreateElectionComponent,

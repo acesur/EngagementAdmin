@@ -229,7 +229,7 @@ export class CreateCitizenComponent implements OnInit {
                     }
             }catch{
             }finally{
-
+                this.utilitiesService.stopLoader();
             }
 
         }
@@ -266,6 +266,7 @@ export class CreateCitizenComponent implements OnInit {
             }catch{
 
             }finally{
+                this.utilitiesService.stopLoader();
             }
         }
     });

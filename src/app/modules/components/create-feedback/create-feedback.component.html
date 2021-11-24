@@ -72,8 +72,8 @@
                                         <mat-label>{{'Start Time' | translate}}</mat-label>
 
                                         <!-- The timepicker input -->
-                                        <input matTimepicker #t="matTimepicker" [ngModelOptions]="{standalone: true}"
-                                            #time="ngModel" [strict]="false" id="timepicker-example" mode="24h"
+                                        <input matTimepicker #t="matTimepicker" formControlName="start_time"
+                                             [strict]="false" id="timepicker-example" mode="24h"
                                             [ngModel]="defaultValue" placeholder="Please select time..." name="time">
 
                                         <!-- An icon for the timepicker input that will open the timepicker dialog when clicked -->
@@ -88,8 +88,8 @@
                                         <mat-label>{{'End Time' | translate}}</mat-label>
 
                                         <!-- The timepicker input -->
-                                        <input matTimepicker [ngModelOptions]="{standalone: true}"
-                                            #timePicker="matTimepicker" #timer="ngModel" [strict]="false"
+                                        <input matTimepicker formControlName="end_time"
+                                            #timePicker="matTimepicker"  [strict]="false"
                                             id="timepicker-example1" mode="24h" [ngModel]="defaultValue"
                                             placeholder="Please select time..." name="timer">
 

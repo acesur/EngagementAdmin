@@ -20,7 +20,12 @@ export class ManageElectionService{
     this.apiDomain = this.sharedService.apiDomain;
    }
 
-   getElectionDetail(id){
+   getElectionsList(id){
+    return this.apiService.get(`${API_URLS.Elections}${id}`, undefined, undefined);
+   }
+
+
+   getElectionDetails(id){
     return this.apiService.get(
         `${API_URLS.Elections}${id}`,
         undefined,

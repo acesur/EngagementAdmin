@@ -19,8 +19,8 @@
                 </button>
             </div>
             <div class="flex flex-shrink-0 md:mt-0 mt-2 justify-end items-center flex-initial sm:mt-0 sm:ml-4">
+<!--                <app-clear-filter [form]="form"></app-clear-filter>-->
                 <app-common-add-button (addBtnClick)="add()"></app-common-add-button>
-            </div>
         </div>
     </div>
 
@@ -28,22 +28,9 @@
         <div class="flex flex-auto overflow-hidden">
             <div class="flex flex-col flex-initial overflow-hidden">
                 <div class="overflow-x-auto sm:overflow-y-auto "
-                    [ngClass]="staffs?.length ? 'table-height' : 'h-50' " cdkScrollable>
+                    [ngClass]="staffsList?.length ? 'table-height' : 'h-50' " cdkScrollable>
                     <table class="w-full min-w-320 table-fixed bg-transparent" mat-table matSort
-                        [multiTemplateDataRows]="true" [dataSource]="staffs" [trackBy]="trackByFn">
-                        <ng-container matColumnDef="slno">
-                            <th class="primary-bg-color dark:bg-black dark:bg-opacity-5 border-left-radius"
-                                mat-header-cell *matHeaderCellDef>
-                                <div class="flex flex-col flex-auto">
-                                    <div>
-                                        {{'S.No' | translate}}
-                                    </div>
-                                </div>
-                            </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
-                                {{staffs?.reference}}
-                            </td>
-                        </ng-container>
+                        [multiTemplateDataRows]="true" [dataSource]="staffsList" [trackBy]="trackByFn">
                         <!-- Name -->
                         <ng-container matColumnDef="staff_firstname">
                             <th class="primary-bg-color dark:bg-black dark:bg-opacity-5" mat-header-cell
@@ -52,15 +39,10 @@
                                     <div>
                                         {{'First Name' | translate}}
                                     </div>
-<!--                                    <div>
-                                        <mat-form-field class="flex-auto" gt-xs:pr-3>
-                                            <input matInput formControlName="staff_firstname">
-                                        </mat-form-field>
-                                    </div>-->
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
-                                {{staffs?.staff_firstname}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staff">
+                                {{staff?.staff_firstname}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="staff_lastname">
@@ -70,15 +52,10 @@
                                     <div>
                                         {{'Last Name' | translate}}
                                     </div>
-                                    <div>
-<!--                                        <mat-form-field class="flex-auto" gt-xs:pr-3>
-                                            <input matInput formControlName="staff_lastname">
-                                        </mat-form-field>-->
-                                    </div>
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
-                                {{staffs?.staff_lastname}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staff">
+                                {{staff?.staff_lastname}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="email">
@@ -93,8 +70,8 @@
                                     </mat-form-field>-->
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
-                                {{staffs?.email}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staff">
+                                {{staff?.email}}
                             </td>
                         </ng-container>
                         <ng-container matColumnDef="contact_number">
@@ -104,15 +81,10 @@
                                     <div>
                                         {{'Contact No' | translate}}
                                     </div>
-                                    <div >
-<!--                                        <mat-form-field>
-                                            <input matInput formControlName="contact_number">
-                                        </mat-form-field>-->
-                                    </div>
                                 </div>
                             </th>
-                            <td class="pr-8 truncate" mat-cell *matCellDef="let staffs">
-                                {{staffs?.contact_number}}
+                            <td class="pr-8 truncate" mat-cell *matCellDef="let staff">
+                                {{staff?.contact_number}}
                             </td>
                         </ng-container>
 <!--                        <ng-container matColumnDef="contract_no">
@@ -143,8 +115,8 @@
                                     <input matInput formControlName="Role">
                                 </mat-form-field>-->
                             </th>
-                            <td class="pr-4" mat-cell *matCellDef="let staffs">
-                                {{staffs?.Role}}
+                            <td class="pr-4" mat-cell *matCellDef="let staff">
+                                {{staff?.Role}}
                             </td>
                         </ng-container>
 
@@ -155,10 +127,10 @@
                                 style="text-align: end !important;" mat-header-cell *matHeaderCellDef disableClear>
                                 {{'Actions' | translate}}
                             </th>
-                            <td class="pr-4 p-0 action-header" mat-cell *matCellDef="let staffs">
+                            <td class="pr-4 p-0 action-header" mat-cell *matCellDef="let staff">
                                 <div class="flex flex-row flex-auto overflow-hidden action-body">
                                     <div class="flex flex-row action-btn-container" fxFlex="0 0 auto">
-                                        <button (click)="view(staffs?.id)"
+                                        <button (click)="view(staff?.id)"
                                             class="action-btn px-4 flex flex-row flex-auto items-center primary-bg-color"
                                             [ngClass]="translationService.getDirection()=='ltr'? 'rounded-l-md' : 'rounded-r-md'"
                                             style="width: auto !important;" mat-icon-button fxLayoutGap="1em">
@@ -174,7 +146,7 @@
                                         </button>
                                     </div>
                                     <mat-menu [xPosition]="'before'" #userActions="matMenu">
-                                        <button (click)="edit(staffs?.id)" mat-menu-item>
+                                        <button (click)="edit(staff?.id)" mat-menu-item>
                                             <div class="flex flex-row flex-initial gap-x-2 items-center">
                                                 <mat-icon svgIcon="mat_outline:edit"></mat-icon>
                                                 <strong>{{'Edit' | translate}}</strong>
@@ -196,7 +168,7 @@
                             <td class="mat-cell border-b-0">{{'No data found' | translate}}</td>
                         </tr>
                         <tr class="h-18 hover:bg-hover" mat-row
-                            *matRowDef="let staffs; columns: getDisplayedColumns();">
+                            *matRowDef="let staff; columns: getDisplayedColumns();">
                         </tr>
                     </table>
                 </div>
@@ -214,4 +186,5 @@
             </div>
         </div>
     </div>
+</div>
 </div>

@@ -9,6 +9,7 @@ import { UtilitiesService } from './utilitiesService';
 import { HttpParams } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { SharedService } from './sharedService';
+import { API_URLS } from 'app/shared/API_URLS';
 
 @Injectable({
     providedIn: 'root',

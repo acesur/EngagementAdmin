@@ -11,7 +11,7 @@
 
         </div>
         <hr class="border-b m-0 border-color">
-        <div [formGroup]='form' class="flex sm:flex-row flex-col p-4 gap-4">
+        <div  class="flex sm:flex-row flex-col p-4 gap-4">
             <div class="flex flex-col gap-y-4" style="flex: 0 0 70%;">
                 <div class="flex flex-col bg-card shadow p-4">
                     <div class="text-xl font-bold tracking-tight highlight-text-color py-4 ">
@@ -83,12 +83,12 @@
                                         <mat-label>{{'Start Time' | translate}}</mat-label>
 
                                         <!-- The timepicker input -->
-                                        <input  matTimepicker #t="matTimepicker" [ngModelOptions]="{standalone: true}" #time="ngModel" [strict]="false"
+                                        <input  matTimepicker #t="matTimepicker" formControlName="start_time"  [strict]="false"
                                             id="timepicker-example" mode="24h" [ngModel]="defaultValue"
                                             placeholder="Please select time..." name="time">
 
                                         <!-- An icon for the timepicker input that will open the timepicker dialog when clicked -->
-                                        <mat-icon matSuffix (click)="t.showDialog()">access_time</mat-icon>
+                                       <!-- <mat-icon matSuffix (click)="t.showDialog()">access_time</mat-icon>-->
 
                                         <!-- Error that will be shown when the input date is invalid -->
 
@@ -99,12 +99,14 @@
                                         <mat-label>{{'End Time' | translate}}</mat-label>
 
                                         <!-- The timepicker input -->
-                                        <input matTimepicker [ngModelOptions]="{standalone: true}" #timePicker="matTimepicker" #timer="ngModel"
+                                        <input matTimepicker formControlName="end_time" #timePicker="matTimepicker"
                                             [strict]="false" id="timepicker-example1" mode="24h"
                                             [ngModel]="defaultValue" placeholder="Please select time..." name="timer">
 
                                         <!-- An icon for the timepicker input that will open the timepicker dialog when clicked -->
+<!--
                                         <mat-icon matSuffix (click)="timePicker.showDialog()">access_time</mat-icon>
+-->
 
                                         <!-- Error that will be shown when the input date is invalid -->
 

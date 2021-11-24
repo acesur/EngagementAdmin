@@ -67,7 +67,7 @@ export class ManageStaffService{
         );
     }
 
-    getStaffsList(limit=10, offset=0, search='', form?){
+    /* getStaffsList(limit=10, offset=0, search='', form?){
         let params = new HttpParams();
         params = params
             .set('limit', limit.toString())
@@ -86,6 +86,15 @@ export class ManageStaffService{
                 params,
                 undefined
             );
+    } */
+    getStaffsList(id){
+        return this.apiService.get(`${API_URLS.Staffs}${id}`, undefined, undefined);
+/*         let url: any API_URLS.Staff;
+        if (queryParams.isDownload){
+            url=`${url}download`; */
+        }
+        /* return this.apiService.get(url, queryParams, undefined); */
     }
 
-}
+
+

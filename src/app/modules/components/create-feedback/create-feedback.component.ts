@@ -232,6 +232,7 @@ export class CreateFeedbackComponent implements OnInit {
                     }
             }catch{
             }finally{
+                this.utilitiesService.stopLoader();
             }
 
         }
@@ -268,6 +269,7 @@ export class CreateFeedbackComponent implements OnInit {
             }catch{
 
             }finally{
+                this.utilitiesService.stopLoader();
             }
         }
     });
